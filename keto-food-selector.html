@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בוחר מזונות קטו - תוכנית ירידה במשקל</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        header p {
+            font-size: 1.15em;
+            color: #a0a0c0;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .legend-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.green { background: linear-gradient(135deg, #00c853, #69f0ae); box-shadow: 0 0 10px rgba(0,200,83,0.4); }
+        .legend-dot.yellow { background: linear-gradient(135deg, #ffd600, #ffff8d); box-shadow: 0 0 10px rgba(255,214,0,0.4); }
+
+        .rating-legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .rating-legend span {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .rating-legend .hate { background: rgba(244,67,54,0.2); border: 1px solid rgba(244,67,54,0.4); color: #ef9a9a; }
+        .rating-legend .sometimes { background: rgba(255,193,7,0.2); border: 1px solid rgba(255,193,7,0.4); color: #ffe082; }
+        .rating-legend .love { background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.4); color: #a5d6a7; }
+        .rating-legend .dunno { background: rgba(156,39,176,0.2); border: 1px solid rgba(156,39,176,0.4); color: #ce93d8; }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .category-header:hover {
+            transform: translateX(5px);
+        }
+
+        .category-header.green-cat {
+            background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(0,200,83,0.05));
+            border: 1px solid rgba(0,200,83,0.3);
+        }
+
+        .category-header.yellow-cat {
+            background: linear-gradient(135deg, rgba(255,214,0,0.15), rgba(255,214,0,0.05));
+            border: 1px solid rgba(255,214,0,0.3);
+        }
+
+        .category-icon {
+            font-size: 1.8em;
+        }
+
+        .category-title {
+            flex: 1;
+        }
+
+        .category-title h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .category-title .subtitle {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+
+        .green-cat h2 { color: #69f0ae; }
+        .yellow-cat h2 { color: #fff176; }
+
+        .toggle-arrow {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-arrow.collapsed {
+            transform: rotate(90deg);
+        }
+
+        .subcategory {
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .subcategory h3 {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }
+
+        .food-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.2s ease;
+        }
+
+        .food-item:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .food-name {
+            font-size: 0.95em;
+            font-weight: 400;
+            flex: 1;
+        }
+
+        .food-emoji {
+            margin-left: 8px;
+            font-size: 1.1em;
+        }
+
+        .rating-buttons {
+            display: flex;
+            gap: 5px;
+            direction: ltr;
+        }
+
+        .rating-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .rating-btn[data-rating="1"] {
+            background: rgba(244,67,54,0.1);
+            border-color: rgba(244,67,54,0.3);
+            color: #ef9a9a;
+        }
+        .rating-btn[data-rating="1"]:hover,
+        .rating-btn[data-rating="1"].active {
+            background: rgba(244,67,54,0.4);
+            border-color: #f44336;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(244,67,54,0.4);
+        }
+
+        .rating-btn[data-rating="2"] {
+            background: rgba(255,193,7,0.1);
+            border-color: rgba(255,193,7,0.3);
+            color: #ffe082;
+        }
+        .rating-btn[data-rating="2"]:hover,
+        .rating-btn[data-rating="2"].active {
+            background: rgba(255,193,7,0.4);
+            border-color: #ffc107;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255,193,7,0.4);
+        }
+
+        .rating-btn[data-rating="3"] {
+            background: rgba(76,175,80,0.1);
+            border-color: rgba(76,175,80,0.3);
+            color: #a5d6a7;
+        }
+        .rating-btn[data-rating="3"]:hover,
+        .rating-btn[data-rating="3"].active {
+            background: rgba(76,175,80,0.4);
+            border-color: #4caf50;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(76,175,80,0.4);
+        }
+
+        .rating-btn[data-rating="4"] {
+            background: rgba(156,39,176,0.1);
+            border-color: rgba(156,39,176,0.3);
+            color: #ce93d8;
+            font-size: 0.65em;
+        }
+        .rating-btn[data-rating="4"]:hover,
+        .rating-btn[data-rating="4"].active {
+            background: rgba(156,39,176,0.4);
+            border-color: #9c27b0;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(156,39,176,0.4);
+        }
+
+        /* Selected food item highlight */
+        .food-item.rated-1 { border-color: rgba(244,67,54,0.3); background: rgba(244,67,54,0.05); }
+        .food-item.rated-2 { border-color: rgba(255,193,7,0.3); background: rgba(255,193,7,0.05); }
+        .food-item.rated-3 { border-color: rgba(76,175,80,0.3); background: rgba(76,175,80,0.05); }
+        .food-item.rated-4 { border-color: rgba(156,39,176,0.3); background: rgba(156,39,176,0.05); }
+
+        /* Bulk actions */
+        .bulk-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .bulk-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #c0c0c0;
+            cursor: pointer;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.82em;
+            transition: all 0.2s ease;
+        }
+
+        .bulk-btn:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15,12,41,0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .stat-num {
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .stat-num.love-count { color: #69f0ae; }
+        .stat-num.sometimes-count { color: #ffe082; }
+        .stat-num.hate-count { color: #ef9a9a; }
+        .stat-num.dunno-count { color: #ce93d8; }
+        .stat-num.unrated-count { color: #90a4ae; }
+
+        /* Progress bar */
+        .progress-container {
+            width: 200px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            align-self: center;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Generate button section */
+        .generate-section {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 30px;
+        }
+
+        .generate-btn {
+            padding: 18px 50px;
+            font-size: 1.3em;
+            font-weight: 700;
+            font-family: 'Heebo', sans-serif;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(0,210,255,0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(0,210,255,0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Output area */
+        .output-section {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .output-section.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .output-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .output-header h3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+
+        .copy-btn {
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            font-family: 'Heebo', sans-serif;
+            border: 2px solid #00d2ff;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+            color: #00d2ff;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0,210,255,0.15);
+        }
+
+        .copy-btn.copied {
+            background: rgba(76,175,80,0.2);
+            border-color: #4caf50;
+            color: #69f0ae;
+        }
+
+        .output-text {
+            width: 100%;
+            min-height: 400px;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: monospace, 'Heebo';
+            font-size: 0.92em;
+            line-height: 1.7;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .output-text:focus {
+            outline: none;
+            border-color: rgba(0,210,255,0.4);
+        }
+
+        /* Search / Filter */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 12px 20px;
+            width: 350px;
+            max-width: 90vw;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #e0e0e0;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1em;
+            direction: rtl;
+        }
+
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-input:focus { outline: none; border-color: rgba(0,210,255,0.5); }
+
+        .filter-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #a0a0c0;
+            cursor: pointer;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.88em;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(0,210,255,0.15);
+            border-color: rgba(0,210,255,0.4);
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            header p { font-size: 0.95em; }
+            .food-grid { grid-template-columns: 1fr; }
+            .stats-bar { gap: 15px; padding: 10px 15px; }
+            .category-header { padding: 14px 18px; }
+            .generate-btn { padding: 14px 35px; font-size: 1.1em; }
+        }
+
+        /* Tooltip */
+        .info-tip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            margin-right: 5px;
+        }
+
+        .info-tip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 125%;
+            right: 50%;
+            transform: translateX(50%);
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.82em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+
+        .info-tip:hover::after {
+            opacity: 1;
+        }
+
+        /* Scroll to top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.4em;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,210,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0,210,255,0.5);
+        }
+
+        .scroll-top.visible {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🥑 תוכנית קטו - בוחר מזונות</h1>
+        <p>
+            בחרו את ההעדפות שלכם לכל מזון — דרגו כל פריט לפי הטעם שלכם.
+            <br>בסוף, לחצו על הכפתור למטה כדי לקבל סיכום של כל הבחירות שלכם, שתוכלו להעתיק ולהדביק כדי ליצור תפריט שבועי מותאם אישית.
+        </p>
+    </header>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot green"></div>
+            <span>ירוק — אכלו כמה שתרצו! (כמעט 0 פחמימות)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot yellow"></div>
+            <span>צהוב — במתינות (מכילים מעט פחמימות)</span>
+        </div>
+    </div>
+
+    <div class="rating-legend">
+        <span class="hate">1 = לא אוהב/ת 👎</span>
+        <span class="sometimes">2 = אוכל/ת לפעמים 🤷</span>
+        <span class="love">3 = אוהב/ת מאוד! ❤️</span>
+        <span class="dunno">? = לא מכיר/ה 🤔</span>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat">
+            <span>❤️ אוהב/ת:</span>
+            <span class="stat-num love-count" id="loveCount">0</span>
+        </div>
+        <div class="stat">
+            <span>🤷 לפעמים:</span>
+            <span class="stat-num sometimes-count" id="sometimesCount">0</span>
+        </div>
+        <div class="stat">
+            <span>👎 לא אוהב/ת:</span>
+            <span class="stat-num hate-count" id="hateCount">0</span>
+        </div>
+        <div class="stat">
+            <span>🤔 לא מכיר/ה:</span>
+            <span class="stat-num dunno-count" id="dunnoCount">0</span>
+        </div>
+        <div class="stat">
+            <span>⬜ טרם דורגו:</span>
+            <span class="stat-num unrated-count" id="unratedCount">0</span>
+        </div>
+        <div class="progress-container">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="🔍 חיפוש מזון...">
+        <div class="filter-btns">
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">הכל</button>
+            <button class="filter-btn" data-filter="unrated" onclick="setFilter('unrated', this)">טרם דורגו</button>
+            <button class="filter-btn" data-filter="3" onclick="setFilter('3', this)">❤️</button>
+            <button class="filter-btn" data-filter="2" onclick="setFilter('2', this)">🤷</button>
+            <button class="filter-btn" data-filter="1" onclick="setFilter('1', this)">👎</button>
+            <button class="filter-btn" data-filter="4" onclick="setFilter('4', this)">🤔</button>
+        </div>
+    </div>
+
+    <div id="categoriesContainer"></div>
+
+    <!-- Generate Section -->
+    <div class="generate-section">
+        <button class="generate-btn" onclick="generateOutput()">
+            📋 צור סיכום של הבחירות שלי
+        </button>
+    </div>
+
+    <!-- Output Section -->
+    <div class="output-section" id="outputSection">
+        <div class="output-header">
+            <h3>📋 סיכום ההעדפות שלך</h3>
+            <button class="copy-btn" id="copyBtn" onclick="copyOutput()">📎 העתק הכל</button>
+        </div>
+        <textarea class="output-text" id="outputText" readonly></textarea>
+    </div>
+</div>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<script>
+// ===================== DATA =====================
+const ketoFoods = {
+    green: [
+        {
+            name: "בשר ועופות",
+            icon: "🥩",
+            items: [
+                { name: "סטייק (אנטריקוט)", emoji: "🥩" },
+                { name: "סינטה", emoji: "🥩" },
+                { name: "צלעות בקר", emoji: "🥩" },
+                { name: "בשר בקר טחון", emoji: "🍔" },
+                { name: "שוקי עוף", emoji: "🍗" },
+                { name: "כרעיים עוף", emoji: "🍗" },
+                { name: "חזה עוף", emoji: "🐔" },
+                { name: "כנפיים עוף", emoji: "🍗" },
+                { name: "חזה הודו", emoji: "🦃" },
+                { name: "שניצל (ללא ציפוי / ציפוי קטו)", emoji: "🍗" },
+                { name: "כבש / טלה", emoji: "🐑" },
+                { name: "צלעות טלה", emoji: "🍖" },
+                { name: "בשר חזיר (לאוכלים)", emoji: "🥓" },
+                { name: "בייקון", emoji: "🥓" },
+                { name: "נקניקיות (ללא סוכר)", emoji: "🌭" },
+                { name: "סלאמי / פסטרמה", emoji: "🥩" },
+                { name: "כבד עוף", emoji: "🫀" },
+                { name: "לבבות עוף", emoji: "🫀" },
+                { name: "בשר מעושן", emoji: "🥩" },
+                { name: "המבורגר (ללא לחמנייה)", emoji: "🍔" },
+            ]
+        },
+        {
+            name: "דגים ופירות ים",
+            icon: "🐟",
+            items: [
+                { name: "סלמון", emoji: "🐟" },
+                { name: "סלמון מעושן", emoji: "🐟" },
+                { name: "טונה טרייה", emoji: "🐟" },
+                { name: "טונה בשמן (קופסה)", emoji: "🥫" },
+                { name: "סרדינים", emoji: "🐟" },
+                { name: "דג בורי / מוסר", emoji: "🐟" },
+                { name: "דניס", emoji: "🐟" },
+                { name: "דג אמנון / טילאפיה", emoji: "🐟" },
+                { name: "פורל / טראוט", emoji: "🐟" },
+                { name: "מקרל", emoji: "🐟" },
+                { name: "שרימפס / חסילונים", emoji: "🦐" },
+                { name: "קלמארי (ללא ציפוי)", emoji: "🦑" },
+                { name: "תמנון", emoji: "🐙" },
+                { name: "מידיות", emoji: "🦪" },
+                { name: "סשימי", emoji: "🍣" },
+                { name: "אנשובי", emoji: "🐟" },
+            ]
+        },
+        {
+            name: "ביצים",
+            icon: "🥚",
+            items: [
+                { name: "ביצה מקושקשת (סקרמבל)", emoji: "🍳" },
+                { name: "ביצת עין", emoji: "🍳" },
+                { name: "ביצה קשה", emoji: "🥚" },
+                { name: "חביתה / אומלט", emoji: "🍳" },
+                { name: "ביצים בעגבניות (שקשוקה קטו)", emoji: "🍳" },
+                { name: "ביצה רכה", emoji: "🥚" },
+                { name: "ביצים ממולאות (deviled eggs)", emoji: "🥚" },
+            ]
+        },
+        {
+            name: "גבינות",
+            icon: "🧀",
+            items: [
+                { name: "גבינה צהובה (צ'דר)", emoji: "🧀" },
+                { name: "מוצרלה", emoji: "🧀" },
+                { name: "פרמזן", emoji: "🧀" },
+                { name: "גבינת שמנת (פילדלפיה)", emoji: "🧀" },
+                { name: "ברי / קממבר", emoji: "🧀" },
+                { name: "גאודה", emoji: "🧀" },
+                { name: "עמק", emoji: "🧀" },
+                { name: "פטה", emoji: "🧀" },
+                { name: "חלומי", emoji: "🧀" },
+                { name: "גבינה כחולה (רוקפור)", emoji: "🧀" },
+                { name: "גבינת עיזים", emoji: "🧀" },
+                { name: "מסקרפונה", emoji: "🧀" },
+                { name: "שמנת חמוצה", emoji: "🥛" },
+                { name: "לאבנה", emoji: "🥛" },
+                { name: "גבינת קוטג' (5%)", emoji: "🥛" },
+            ]
+        },
+        {
+            name: "ירקות ירוקים ונמוכי פחמימות",
+            icon: "🥬",
+            items: [
+                { name: "חסה", emoji: "🥬" },
+                { name: "תרד / שפנך", emoji: "🥬" },
+                { name: "קייל", emoji: "🥬" },
+                { name: "רוקט / ארוגולה", emoji: "🥬" },
+                { name: "מלפפון", emoji: "🥒" },
+                { name: "סלרי", emoji: "🥬" },
+                { name: "קישוא / זוקיני", emoji: "🥒" },
+                { name: "ברוקולי", emoji: "🥦" },
+                { name: "כרובית", emoji: "🥦" },
+                { name: "אספרגוס", emoji: "🌿" },
+                { name: "פטריות שמפיניון", emoji: "🍄" },
+                { name: "פטריות פורטובלו", emoji: "🍄" },
+                { name: "כרוב ירוק / לבן", emoji: "🥬" },
+                { name: "כרוב סגול", emoji: "🥬" },
+                { name: "כרוב ניצנים (נבטי בריסל)", emoji: "🥬" },
+                { name: "שעועית ירוקה", emoji: "🌿" },
+                { name: "פלפל ירוק", emoji: "🫑" },
+                { name: "צנונית", emoji: "🔴" },
+                { name: "חציל", emoji: "🍆" },
+                { name: "בצל ירוק", emoji: "🧅" },
+                { name: "עלי בייבי ספינג", emoji: "🌿" },
+                { name: "בוק צ'וי", emoji: "🥬" },
+                { name: "ארטישוק", emoji: "🌿" },
+            ]
+        },
+        {
+            name: "שומנים ושמנים בריאים",
+            icon: "🫒",
+            items: [
+                { name: "שמן זית כתית מעולה", emoji: "🫒" },
+                { name: "שמן קוקוס", emoji: "🥥" },
+                { name: "חמאה", emoji: "🧈" },
+                { name: "גהי (חמאה מזוקקת)", emoji: "🧈" },
+                { name: "שמן אבוקדו", emoji: "🥑" },
+                { name: "שמן MCT", emoji: "🧴" },
+                { name: "שמלץ (שומן עוף)", emoji: "🍳" },
+                { name: "שמנת מתוקה לבישול (38%)", emoji: "🥛" },
+                { name: "מיונז (ללא סוכר)", emoji: "🫙" },
+                { name: "טחינה גולמית", emoji: "🫙" },
+            ]
+        },
+        {
+            name: "אבוקדו וזיתים",
+            icon: "🥑",
+            items: [
+                { name: "אבוקדו", emoji: "🥑" },
+                { name: "גוואקמולי", emoji: "🥑" },
+                { name: "זיתים ירוקים", emoji: "🫒" },
+                { name: "זיתים שחורים", emoji: "🫒" },
+                { name: "זיתים קלמטה", emoji: "🫒" },
+            ]
+        },
+        {
+            name: "תבלינים ורטבים (0 פחמימות)",
+            icon: "🧂",
+            items: [
+                { name: "מלח", emoji: "🧂" },
+                { name: "פלפל שחור", emoji: "🌶️" },
+                { name: "פפריקה", emoji: "🌶️" },
+                { name: "כורכום", emoji: "🟡" },
+                { name: "קימון", emoji: "🌿" },
+                { name: "אורגנו", emoji: "🌿" },
+                { name: "רוזמרין", emoji: "🌿" },
+                { name: "בזיליקום", emoji: "🌿" },
+                { name: "כוסברה טרייה", emoji: "🌿" },
+                { name: "פטרוזיליה", emoji: "🌿" },
+                { name: "שמיר (שבט)", emoji: "🌿" },
+                { name: "שום טרי", emoji: "🧄" },
+                { name: "ג'ינג'ר טרי", emoji: "🫚" },
+                { name: "חרדל", emoji: "🟡" },
+                { name: "חומץ תפוחים", emoji: "🍎" },
+                { name: "רוטב סויה (ללא סוכר)", emoji: "🫙" },
+                { name: "סריראצ'ה (כמויות קטנות)", emoji: "🌶️" },
+                { name: "הריסה", emoji: "🌶️" },
+                { name: "רוטב טבסקו / חריף", emoji: "🌶️" },
+                { name: "לימון", emoji: "🍋" },
+            ]
+        },
+        {
+            name: "משקאות",
+            icon: "☕",
+            items: [
+                { name: "מים", emoji: "💧" },
+                { name: "מים עם לימון", emoji: "🍋" },
+                { name: "קפה שחור", emoji: "☕" },
+                { name: "קפה עם שמנת / חמאה (Bulletproof)", emoji: "☕" },
+                { name: "תה ירוק", emoji: "🍵" },
+                { name: "תה שחור", emoji: "🍵" },
+                { name: "תה צמחים (ללא סוכר)", emoji: "🍵" },
+                { name: "מי סודה / סלצר", emoji: "🫧" },
+            ]
+        },
+    ],
+    yellow: [
+        {
+            name: "אגוזים וזרעים (במתינות)",
+            icon: "🥜",
+            items: [
+                { name: "שקדים", emoji: "🌰" },
+                { name: "אגוזי מלך", emoji: "🌰" },
+                { name: "אגוזי פקאן", emoji: "🌰" },
+                { name: "אגוזי מקדמיה", emoji: "🌰" },
+                { name: "אגוזי לוז", emoji: "🌰" },
+                { name: "אגוזי ברזיל", emoji: "🌰" },
+                { name: "בוטנים (במתינות)", emoji: "🥜" },
+                { name: "חמאת שקדים", emoji: "🥜" },
+                { name: "חמאת בוטנים טבעית", emoji: "🥜" },
+                { name: "זרעי צ'יה", emoji: "🌱" },
+                { name: "זרעי פשתן", emoji: "🌱" },
+                { name: "זרעי המפ", emoji: "🌱" },
+                { name: "זרעי חמנייה", emoji: "🌻" },
+                { name: "זרעי דלעת", emoji: "🎃" },
+                { name: "קוקוס מיובש (ללא סוכר)", emoji: "🥥" },
+            ]
+        },
+        {
+            name: "ירקות עם קצת יותר פחמימות",
+            icon: "🫑",
+            items: [
+                { name: "עגבניות", emoji: "🍅" },
+                { name: "עגבניות שרי", emoji: "🍅" },
+                { name: "בצל (כמויות קטנות)", emoji: "🧅" },
+                { name: "פלפל אדום", emoji: "🫑" },
+                { name: "פלפל צהוב", emoji: "🫑" },
+                { name: "גזר (כמות מעטה מאוד)", emoji: "🥕" },
+                { name: "דלעת / דלורית", emoji: "🎃" },
+                { name: "סלק (כמות קטנה מאוד)", emoji: "🔴" },
+                { name: "אפונה ירוקה (כמות קטנה)", emoji: "🟢" },
+                { name: "רוטב עגבניות (ללא סוכר)", emoji: "🍅" },
+                { name: "משחת עגבניות", emoji: "🍅" },
+            ]
+        },
+        {
+            name: "פירות (במתינות מאוד)",
+            icon: "🫐",
+            items: [
+                { name: "תותים", emoji: "🍓" },
+                { name: "אוכמניות (בלוברי)", emoji: "🫐" },
+                { name: "פטל (רספברי)", emoji: "🫐" },
+                { name: "אסאי", emoji: "🫐" },
+                { name: "לימון / ליים", emoji: "🍋" },
+                { name: "קוקוס טרי", emoji: "🥥" },
+                { name: "אבטיח (פרוסה קטנה)", emoji: "🍉" },
+            ]
+        },
+        {
+            name: "מוצרי חלב עם פחמימות",
+            icon: "🥛",
+            items: [
+                { name: "יוגורט יווני מלא שומן (ללא סוכר)", emoji: "🥛" },
+                { name: "חלב קוקוס (לבישול)", emoji: "🥥" },
+                { name: "חלב שקדים (ללא סוכר)", emoji: "🥛" },
+                { name: "שמנת להקצפה", emoji: "🥛" },
+                { name: "גבינת ריקוטה", emoji: "🧀" },
+                { name: "קפיר", emoji: "🥛" },
+            ]
+        },
+        {
+            name: "חטיפים ומתוקים קטו",
+            icon: "🍫",
+            items: [
+                { name: "שוקולד מריר 85%+ קקאו", emoji: "🍫" },
+                { name: "שוקולד מריר 70%+ קקאו", emoji: "🍫" },
+                { name: "אבקת קקאו (ללא סוכר)", emoji: "🍫" },
+                { name: "חטיפי קטו מהחנות", emoji: "🍫" },
+                { name: "קרקרים מקמח שקדים", emoji: "🍪" },
+                { name: "פנקייק קטו (קמח שקדים/קוקוס)", emoji: "🥞" },
+                { name: "עוגת גבינה קטו", emoji: "🍰" },
+                { name: "גלידת קטו", emoji: "🍦" },
+                { name: "פודינג צ'יה", emoji: "🍮" },
+                { name: "פצפוצי חזרת (pork rinds)", emoji: "🍿" },
+                { name: "צ'יפס קייל", emoji: "🥬" },
+                { name: "ג'לי ללא סוכר", emoji: "🍮" },
+            ]
+        },
+        {
+            name: "קמחים ואבקות קטו",
+            icon: "🫙",
+            items: [
+                { name: "קמח שקדים", emoji: "🫙" },
+                { name: "קמח קוקוס", emoji: "🫙" },
+                { name: "אבקת פסיליום", emoji: "🫙" },
+                { name: "אריתריטול (ממתיק)", emoji: "🫙" },
+                { name: "סטיוויה", emoji: "🌿" },
+                { name: "מונק פרוט (ממתיק)", emoji: "🫙" },
+                { name: "ג'לטין / קולגן", emoji: "🫙" },
+                { name: "אבקת חלבון (ללא סוכר)", emoji: "🫙" },
+            ]
+        },
+        {
+            name: "משקאות (במתינות)",
+            icon: "🥤",
+            items: [
+                { name: "יין יבש (אדום / לבן)", emoji: "🍷" },
+                { name: "וודקה / ויסקי (ללא מיקסר)", emoji: "🥃" },
+                { name: "קולה זירו / דיאט", emoji: "🥤" },
+                { name: "משקה אנרגיה ללא סוכר", emoji: "⚡" },
+                { name: "מי קוקוס (כמות קטנה)", emoji: "🥥" },
+                { name: "מרק עצמות", emoji: "🍲" },
+            ]
+        },
+        {
+            name: "תחליפי לחם וקטו-פרנדלי",
+            icon: "🍞",
+            items: [
+                { name: "לחם קטו (מקמח שקדים/קוקוס)", emoji: "🍞" },
+                { name: "טורטייה קטו", emoji: "🌯" },
+                { name: "לחמניות קטו", emoji: "🍞" },
+                { name: "פיצה קטו (בסיס כרובית/גבינה)", emoji: "🍕" },
+                { name: "אורז כרובית", emoji: "🍚" },
+                { name: "נודלס מזוקיני (זודלס)", emoji: "🍝" },
+                { name: "נודלס שירטאקי (קונג'אק)", emoji: "🍜" },
+                { name: "לאפות קטו", emoji: "🫓" },
+                { name: "עטיפת חסה במקום לחם", emoji: "🥬" },
+            ]
+        },
+    ]
+};
+
+// ===================== STATE =====================
+let ratings = {};
+let currentFilter = 'all';
+let totalItems = 0;
+
+// ===================== RENDER =====================
+function renderAll() {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    totalItems = 0;
+
+    // Green categories
+    const greenSection = document.createElement('div');
+    greenSection.className = 'category-section';
+    const greenHeader = createCategoryHeader('🟢 מזונות ירוקים — אכלו בחופשיות!', 'green-cat', 'green-section');
+    greenSection.appendChild(greenHeader);
+
+    const greenBody = document.createElement('div');
+    greenBody.id = 'green-section-body';
+    ketoFoods.green.forEach(sub => {
+        greenBody.appendChild(createSubcategory(sub, 'green'));
+    });
+    greenSection.appendChild(greenBody);
+    container.appendChild(greenSection);
+
+    // Yellow categories
+    const yellowSection = document.createElement('div');
+    yellowSection.className = 'category-section';
+    const yellowHeader = createCategoryHeader('🟡 מזונות צהובים — במתינות', 'yellow-cat', 'yellow-section');
+    yellowSection.appendChild(yellowHeader);
+
+    const yellowBody = document.createElement('div');
+    yellowBody.id = 'yellow-section-body';
+    ketoFoods.yellow.forEach(sub => {
+        yellowBody.appendChild(createSubcategory(sub, 'yellow'));
+    });
+    yellowSection.appendChild(yellowBody);
+    container.appendChild(yellowSection);
+
+    updateStats();
+}
+
+function createCategoryHeader(text, cssClass, sectionId) {
+    const header = document.createElement('div');
+    header.className = `category-header ${cssClass}`;
+    header.innerHTML = `
+        <div class="category-title"><h2>${text}</h2></div>
+        <span class="toggle-arrow" id="${sectionId}-arrow">▼</span>
+    `;
+    header.addEventListener('click', () => {
+        const body = document.getElementById(sectionId + '-body');
+        const arrow = document.getElementById(sectionId + '-arrow');
+        if (body.style.display === 'none') {
+            body.style.display = '';
+            arrow.classList.remove('collapsed');
+        } else {
+            body.style.display = 'none';
+            arrow.classList.add('collapsed');
+        }
+    });
+    return header;
+}
+
+function createSubcategory(sub, color) {
+    const div = document.createElement('div');
+    div.className = 'subcategory';
+
+    const bulkId = `bulk-${color}-${sub.name.replace(/\s/g, '')}`;
+    div.innerHTML = `
+        <h3>${sub.icon} ${sub.name}</h3>
+        <div class="bulk-actions" id="${bulkId}">
+            <button class="bulk-btn" onclick="bulkRate('${color}', '${sub.name}', 3)">❤️ הכל אוהב</button>
+            <button class="bulk-btn" onclick="bulkRate('${color}', '${sub.name}', 2)">🤷 הכל לפעמים</button>
+            <button class="bulk-btn" onclick="bulkRate('${color}', '${sub.name}', 1)">👎 הכל לא אוהב</button>
+            <button class="bulk-btn" onclick="bulkRate('${color}', '${sub.name}', 4)">🤔 הכל לא מכיר</button>
+            <button class="bulk-btn" onclick="bulkRate('${color}', '${sub.name}', 0)">🔄 נקה הכל</button>
+        </div>
+    `;
+
+    const grid = document.createElement('div');
+    grid.className = 'food-grid';
+    grid.setAttribute('data-subcategory', sub.name);
+    grid.setAttribute('data-color', color);
+
+    sub.items.forEach(item => {
+        totalItems++;
+        const key = `${color}|${sub.name}|${item.name}`;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'food-item';
+        itemDiv.id = `item-${hashKey(key)}`;
+        itemDiv.setAttribute('data-key', key);
+        itemDiv.setAttribute('data-name', item.name);
+
+        const ratedClass = ratings[key] ? `rated-${ratings[key]}` : '';
+        if (ratedClass) itemDiv.classList.add(ratedClass);
+
+        itemDiv.innerHTML = `
+            <span class="food-emoji">${item.emoji}</span>
+            <span class="food-name">${item.name}</span>
+            <div class="rating-buttons">
+                <button class="rating-btn ${ratings[key]===1?'active':''}" data-rating="1" onclick="rate('${escKey(key)}', 1)">1</button>
+                <button class="rating-btn ${ratings[key]===2?'active':''}" data-rating="2" onclick="rate('${escKey(key)}', 2)">2</button>
+                <button class="rating-btn ${ratings[key]===3?'active':''}" data-rating="3" onclick="rate('${escKey(key)}', 3)">3</button>
+                <button class="rating-btn ${ratings[key]===4?'active':''}" data-rating="4" onclick="rate('${escKey(key)}', 4)">?</button>
+            </div>
+        `;
+        grid.appendChild(itemDiv);
+    });
+
+    div.appendChild(grid);
+    return div;
+}
+
+function hashKey(key) {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+        const char = key.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0;
+    }
+    return Math.abs(hash);
+}
+
+function escKey(key) {
+    return key.replace(/'/g, "\\'");
+}
+
+// ===================== ACTIONS =====================
+function rate(key, value) {
+    if (ratings[key] === value) {
+        delete ratings[key];
+    } else {
+        ratings[key] = value;
+    }
+    updateItemUI(key);
+    updateStats();
+    saveToLocal();
+}
+
+function updateItemUI(key) {
+    const id = `item-${hashKey(key)}`;
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.classList.remove('rated-1', 'rated-2', 'rated-3', 'rated-4');
+    if (ratings[key]) el.classList.add(`rated-${ratings[key]}`);
+
+    el.querySelectorAll('.rating-btn').forEach(btn => {
+        const r = parseInt(btn.getAttribute('data-rating'));
+        btn.classList.toggle('active', ratings[key] === r);
+    });
+}
+
+function bulkRate(color, subName, value) {
+    const data = ketoFoods[color];
+    const sub = data.find(s => s.name === subName);
+    if (!sub) return;
+
+    sub.items.forEach(item => {
+        const key = `${color}|${subName}|${item.name}`;
+        if (value === 0) {
+            delete ratings[key];
+        } else {
+            ratings[key] = value;
+        }
+        updateItemUI(key);
+    });
+    updateStats();
+    saveToLocal();
+}
+
+function updateStats() {
+    let love = 0, sometimes = 0, hate = 0, dunno = 0;
+    Object.values(ratings).forEach(v => {
+        if (v === 3) love++;
+        else if (v === 2) sometimes++;
+        else if (v === 1) hate++;
+        else if (v === 4) dunno++;
+    });
+
+    document.getElementById('loveCount').textContent = love;
+    document.getElementById('sometimesCount').textContent = sometimes;
+    document.getElementById('hateCount').textContent = hate;
+    document.getElementById('dunnoCount').textContent = dunno;
+
+    // Count total items
+    let total = 0;
+    [...ketoFoods.green, ...ketoFoods.yellow].forEach(sub => total += sub.items.length);
+
+    const unrated = total - love - sometimes - hate - dunno;
+    document.getElementById('unratedCount').textContent = unrated;
+
+    const pct = total > 0 ? ((love + sometimes + hate) / total * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ===================== SEARCH & FILTER =====================
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+}
+
+function applyFilters() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    document.querySelectorAll('.food-item').forEach(el => {
+        const name = el.getAttribute('data-name').toLowerCase();
+        const key = el.getAttribute('data-key');
+        const r = ratings[key] || 0;
+
+        let showSearch = !query || name.includes(query);
+        let showFilter = currentFilter === 'all' ||
+            (currentFilter === 'unrated' && r === 0) ||
+            (currentFilter === '1' && r === 1) ||
+            (currentFilter === '2' && r === 2) ||
+            (currentFilter === '3' && r === 3) ||
+            (currentFilter === '4' && r === 4);
+
+        el.style.display = (showSearch && showFilter) ? '' : 'none';
+    });
+}
+
+// ===================== ENGLISH TRANSLATION MAP =====================
+const enMap = {
+    // Subcategory names
+    "בשר ועופות": "Meat & Poultry",
+    "דגים ופירות ים": "Fish & Seafood",
+    "ביצים": "Eggs",
+    "גבינות": "Cheeses",
+    "ירקות ירוקים ונמוכי פחמימות": "Low-Carb Vegetables",
+    "שומנים ושמנים בריאים": "Healthy Fats & Oils",
+    "אבוקדו וזיתים": "Avocado & Olives",
+    "תבלינים ורטבים (0 פחמימות)": "Spices & Sauces (zero carb)",
+    "משקאות": "Beverages",
+    "אגוזים וזרעים (במתינות)": "Nuts & Seeds (in moderation)",
+    "ירקות עם קצת יותר פחמימות": "Higher-Carb Vegetables",
+    "פירות (במתינות מאוד)": "Fruits (very limited)",
+    "מוצרי חלב עם פחמימות": "Dairy with Carbs",
+    "חטיפים ומתוקים קטו": "Keto Snacks & Sweets",
+    "קמחים ואבקות קטו": "Keto Flours & Powders",
+    "משקאות (במתינות)": "Beverages (in moderation)",
+    "תחליפי לחם וקטו-פרנדלי": "Bread Substitutes & Keto-Friendly",
+    // Food item names
+    "סטייק (אנטריקוט)": "Steak (Ribeye / Entrecote)",
+    "סינטה": "Sirloin",
+    "צלעות בקר": "Beef Ribs",
+    "בשר בקר טחון": "Ground Beef",
+    "שוקי עוף": "Chicken Thighs",
+    "כרעיים עוף": "Chicken Drumsticks",
+    "חזה עוף": "Chicken Breast",
+    "כנפיים עוף": "Chicken Wings",
+    "חזה הודו": "Turkey Breast",
+    "שניצל (ללא ציפוי / ציפוי קטו)": "Schnitzel (no breading / keto breading)",
+    "כבש / טלה": "Lamb",
+    "צלעות טלה": "Lamb Chops",
+    "בשר חזיר (לאוכלים)": "Pork",
+    "בייקון": "Bacon",
+    "נקניקיות (ללא סוכר)": "Sausages (sugar-free)",
+    "סלאמי / פסטרמה": "Salami / Pastrami",
+    "כבד עוף": "Chicken Liver",
+    "לבבות עוף": "Chicken Hearts",
+    "בשר מעושן": "Smoked Meat",
+    "המבורגר (ללא לחמנייה)": "Burger Patty (no bun)",
+    "סלמון": "Salmon",
+    "סלמון מעושן": "Smoked Salmon",
+    "טונה טרייה": "Fresh Tuna",
+    "טונה בשמן (קופסה)": "Canned Tuna in Oil",
+    "סרדינים": "Sardines",
+    "דג בורי / מוסר": "Sea Bass",
+    "דניס": "Sea Bream (Denis)",
+    "דג אמנון / טילאפיה": "Tilapia",
+    "פורל / טראוט": "Trout",
+    "מקרל": "Mackerel",
+    "שרימפס / חסילונים": "Shrimp",
+    "קלמארי (ללא ציפוי)": "Calamari (no breading)",
+    "תמנון": "Octopus",
+    "מידיות": "Mussels",
+    "סשימי": "Sashimi",
+    "אנשובי": "Anchovies",
+    "ביצה מקושקשת (סקרמבל)": "Scrambled Eggs",
+    "ביצת עין": "Fried Egg (sunny side up)",
+    "ביצה קשה": "Hard-Boiled Egg",
+    "חביתה / אומלט": "Omelette",
+    "ביצים בעגבניות (שקשוקה קטו)": "Shakshuka (keto)",
+    "ביצה רכה": "Soft-Boiled Egg",
+    "ביצים ממולאות (deviled eggs)": "Deviled Eggs",
+    "גבינה צהובה (צ'דר)": "Cheddar Cheese",
+    "מוצרלה": "Mozzarella",
+    "פרמזן": "Parmesan",
+    "גבינת שמנת (פילדלפיה)": "Cream Cheese (Philadelphia)",
+    "ברי / קממבר": "Brie / Camembert",
+    "גאודה": "Gouda",
+    "עמק": "Emek (Israeli yellow cheese)",
+    "פטה": "Feta",
+    "חלומי": "Halloumi",
+    "גבינה כחולה (רוקפור)": "Blue Cheese (Roquefort)",
+    "גבינת עיזים": "Goat Cheese",
+    "מסקרפונה": "Mascarpone",
+    "שמנת חמוצה": "Sour Cream",
+    "לאבנה": "Labneh",
+    "גבינת קוטג' (5%)": "Cottage Cheese (5% fat)",
+    "חסה": "Lettuce",
+    "תרד / שפנך": "Spinach",
+    "קייל": "Kale",
+    "רוקט / ארוגולה": "Arugula",
+    "מלפפון": "Cucumber",
+    "סלרי": "Celery",
+    "קישוא / זוקיני": "Zucchini",
+    "ברוקולי": "Broccoli",
+    "כרובית": "Cauliflower",
+    "אספרגוס": "Asparagus",
+    "פטריות שמפיניון": "Button Mushrooms",
+    "פטריות פורטובלו": "Portobello Mushrooms",
+    "כרוב ירוק / לבן": "Green / White Cabbage",
+    "כרוב סגול": "Red Cabbage",
+    "כרוב ניצנים (נבטי בריסל)": "Brussels Sprouts",
+    "שעועית ירוקה": "Green Beans",
+    "פלפל ירוק": "Green Bell Pepper",
+    "צנונית": "Radish",
+    "חציל": "Eggplant",
+    "בצל ירוק": "Scallions (Green Onion)",
+    "עלי בייבי ספינג": "Baby Spinach Leaves",
+    "בוק צ'וי": "Bok Choy",
+    "ארטישוק": "Artichoke",
+    "שמן זית כתית מעולה": "Extra Virgin Olive Oil",
+    "שמן קוקוס": "Coconut Oil",
+    "חמאה": "Butter",
+    "גהי (חמאה מזוקקת)": "Ghee (Clarified Butter)",
+    "שמן אבוקדו": "Avocado Oil",
+    "שמן MCT": "MCT Oil",
+    "שמלץ (שומן עוף)": "Schmaltz (Chicken Fat)",
+    "שמנת מתוקה לבישול (38%)": "Heavy Cream (38%)",
+    "מיונז (ללא סוכר)": "Mayonnaise (sugar-free)",
+    "טחינה גולמית": "Raw Tahini",
+    "אבוקדו": "Avocado",
+    "גוואקמולי": "Guacamole",
+    "זיתים ירוקים": "Green Olives",
+    "זיתים שחורים": "Black Olives",
+    "זיתים קלמטה": "Kalamata Olives",
+    "מלח": "Salt",
+    "פלפל שחור": "Black Pepper",
+    "פפריקה": "Paprika",
+    "כורכום": "Turmeric",
+    "קימון": "Cumin",
+    "אורגנו": "Oregano",
+    "רוזמרין": "Rosemary",
+    "בזיליקום": "Basil",
+    "כוסברה טרייה": "Fresh Cilantro",
+    "פטרוזיליה": "Parsley",
+    "שמיר (שבט)": "Dill",
+    "שום טרי": "Fresh Garlic",
+    "ג'ינג'ר טרי": "Fresh Ginger",
+    "חרדל": "Mustard",
+    "חומץ תפוחים": "Apple Cider Vinegar",
+    "רוטב סויה (ללא סוכר)": "Soy Sauce (sugar-free)",
+    "סריראצ'ה (כמויות קטנות)": "Sriracha (small amounts)",
+    "הריסה": "Harissa",
+    "רוטב טבסקו / חריף": "Tabasco / Hot Sauce",
+    "לימון": "Lemon",
+    "מים": "Water",
+    "מים עם לימון": "Lemon Water",
+    "קפה שחור": "Black Coffee",
+    "קפה עם שמנת / חמאה (Bulletproof)": "Bulletproof Coffee (with cream/butter)",
+    "תה ירוק": "Green Tea",
+    "תה שחור": "Black Tea",
+    "תה צמחים (ללא סוכר)": "Herbal Tea (unsweetened)",
+    "מי סודה / סלצר": "Sparkling Water / Seltzer",
+    "שקדים": "Almonds",
+    "אגוזי מלך": "Walnuts",
+    "אגוזי פקאן": "Pecans",
+    "אגוזי מקדמיה": "Macadamia Nuts",
+    "אגוזי לוז": "Hazelnuts",
+    "אגוזי ברזיל": "Brazil Nuts",
+    "בוטנים (במתינות)": "Peanuts (in moderation)",
+    "חמאת שקדים": "Almond Butter",
+    "חמאת בוטנים טבעית": "Natural Peanut Butter",
+    "זרעי צ'יה": "Chia Seeds",
+    "זרעי פשתן": "Flax Seeds",
+    "זרעי המפ": "Hemp Seeds",
+    "זרעי חמנייה": "Sunflower Seeds",
+    "זרעי דלעת": "Pumpkin Seeds",
+    "קוקוס מיובש (ללא סוכר)": "Unsweetened Dried Coconut",
+    "עגבניות": "Tomatoes",
+    "עגבניות שרי": "Cherry Tomatoes",
+    "בצל (כמויות קטנות)": "Onion (small amounts)",
+    "פלפל אדום": "Red Bell Pepper",
+    "פלפל צהוב": "Yellow Bell Pepper",
+    "גזר (כמות מעטה מאוד)": "Carrot (very small amount)",
+    "דלעת / דלורית": "Pumpkin / Butternut Squash",
+    "סלק (כמות קטנה מאוד)": "Beet (very small amount)",
+    "אפונה ירוקה (כמות קטנה)": "Green Peas (small amount)",
+    "רוטב עגבניות (ללא סוכר)": "Tomato Sauce (sugar-free)",
+    "משחת עגבניות": "Tomato Paste",
+    "תותים": "Strawberries",
+    "אוכמניות (בלוברי)": "Blueberries",
+    "פטל (רספברי)": "Raspberries",
+    "אסאי": "Acai",
+    "לימון / ליים": "Lemon / Lime",
+    "קוקוס טרי": "Fresh Coconut",
+    "אבטיח (פרוסה קטנה)": "Watermelon (small slice)",
+    "יוגורט יווני מלא שומן (ללא סוכר)": "Full-Fat Greek Yogurt (unsweetened)",
+    "חלב קוקוס (לבישול)": "Coconut Milk (for cooking)",
+    "חלב שקדים (ללא סוכר)": "Almond Milk (unsweetened)",
+    "שמנת להקצפה": "Whipping Cream",
+    "גבינת ריקוטה": "Ricotta Cheese",
+    "קפיר": "Kefir",
+    "שוקולד מריר 85%+ קקאו": "Dark Chocolate 85%+ Cacao",
+    "שוקולד מריר 70%+ קקאו": "Dark Chocolate 70%+ Cacao",
+    "אבקת קקאו (ללא סוכר)": "Unsweetened Cacao Powder",
+    "חטיפי קטו מהחנות": "Store-Bought Keto Bars",
+    "קרקרים מקמח שקדים": "Almond Flour Crackers",
+    "פנקייק קטו (קמח שקדים/קוקוס)": "Keto Pancakes (almond/coconut flour)",
+    "עוגת גבינה קטו": "Keto Cheesecake",
+    "גלידת קטו": "Keto Ice Cream",
+    "פודינג צ'יה": "Chia Pudding",
+    "פצפוצי חזרת (pork rinds)": "Pork Rinds",
+    "צ'יפס קייל": "Kale Chips",
+    "ג'לי ללא סוכר": "Sugar-Free Jello",
+    "קמח שקדים": "Almond Flour",
+    "קמח קוקוס": "Coconut Flour",
+    "אבקת פסיליום": "Psyllium Husk Powder",
+    "אריתריטול (ממתיק)": "Erythritol (sweetener)",
+    "סטיוויה": "Stevia",
+    "מונק פרוט (ממתיק)": "Monk Fruit (sweetener)",
+    "ג'לטין / קולגן": "Gelatin / Collagen",
+    "אבקת חלבון (ללא סוכר)": "Protein Powder (sugar-free)",
+    "יין יבש (אדום / לבן)": "Dry Wine (red / white)",
+    "וודקה / ויסקי (ללא מיקסר)": "Vodka / Whiskey (no mixer)",
+    "קולה זירו / דיאט": "Diet Coke / Coke Zero",
+    "משקה אנרגיה ללא סוכר": "Sugar-Free Energy Drink",
+    "מי קוקוס (כמות קטנה)": "Coconut Water (small amount)",
+    "מרק עצמות": "Bone Broth",
+    "לחם קטו (מקמח שקדים/קוקוס)": "Keto Bread (almond/coconut flour)",
+    "טורטייה קטו": "Keto Tortilla",
+    "לחמניות קטו": "Keto Buns",
+    "פיצה קטו (בסיס כרובית/גבינה)": "Keto Pizza (cauliflower/cheese base)",
+    "אורז כרובית": "Cauliflower Rice",
+    "נודלס מזוקיני (זודלס)": "Zucchini Noodles (Zoodles)",
+    "נודלס שירטאקי (קונג'אק)": "Shirataki Noodles (Konjac)",
+    "לאפות קטו": "Keto Flatbread",
+    "עטיפת חסה במקום לחם": "Lettuce Wraps (instead of bread)",
+};
+
+function toEn(hebrewName) {
+    return enMap[hebrewName] || hebrewName;
+}
+
+// ===================== GENERATE OUTPUT =====================
+function generateOutput() {
+    const lines = [];
+    lines.push('===================================================');
+    lines.push('  My Keto Food Preferences');
+    lines.push('  Date: ' + new Date().toLocaleDateString('en-US'));
+    lines.push('===================================================');
+    lines.push('');
+
+    const loveGreen = [], loveYellow = [];
+    const sometimesGreen = [], sometimesYellow = [];
+    const hateGreen = [], hateYellow = [];
+    const dunnoGreen = [], dunnoYellow = [];
+
+    function collectByColor(color) {
+        const data = ketoFoods[color];
+        data.forEach(sub => {
+            sub.items.forEach(item => {
+                const key = `${color}|${sub.name}|${item.name}`;
+                const r = ratings[key];
+                const entry = { name: item.name, sub: sub.name };
+                if (r === 3) {
+                    if (color === 'green') loveGreen.push(entry);
+                    else loveYellow.push(entry);
+                } else if (r === 2) {
+                    if (color === 'green') sometimesGreen.push(entry);
+                    else sometimesYellow.push(entry);
+                } else if (r === 1) {
+                    if (color === 'green') hateGreen.push(entry);
+                    else hateYellow.push(entry);
+                } else if (r === 4) {
+                    if (color === 'green') dunnoGreen.push(entry);
+                    else dunnoYellow.push(entry);
+                }
+            });
+        });
+    }
+
+    collectByColor('green');
+    collectByColor('yellow');
+
+    function printGroup(label, greenItems, yellowItems) {
+        if (!greenItems.length && !yellowItems.length) return;
+        lines.push(label);
+        lines.push('---------------------------------------------------');
+
+        if (greenItems.length) {
+            lines.push('  GREEN (eat freely):');
+            const grouped = groupBySubcategory(greenItems);
+            for (const [sub, items] of Object.entries(grouped)) {
+                lines.push(`    ${toEn(sub)}:`);
+                items.forEach(i => lines.push(`      - ${toEn(i.name)}`));
+            }
+            lines.push('');
+        }
+
+        if (yellowItems.length) {
+            lines.push('  YELLOW (in moderation):');
+            const grouped = groupBySubcategory(yellowItems);
+            for (const [sub, items] of Object.entries(grouped)) {
+                lines.push(`    ${toEn(sub)}:`);
+                items.forEach(i => lines.push(`      - ${toEn(i.name)}`));
+            }
+            lines.push('');
+        }
+    }
+
+    printGroup('LOVE (rating 3)', loveGreen, loveYellow);
+    printGroup('CAN EAT SOMETIMES (rating 2)', sometimesGreen, sometimesYellow);
+    printGroup('HATE / DO NOT WANT (rating 1)', hateGreen, hateYellow);
+    printGroup('DON\'T KNOW / NEVER TRIED', dunnoGreen, dunnoYellow);
+
+    lines.push('===================================================');
+    lines.push('Summary:');
+    lines.push(`  Love: ${loveGreen.length + loveYellow.length} items`);
+    lines.push(`  Can eat sometimes: ${sometimesGreen.length + sometimesYellow.length} items`);
+    lines.push(`  Hate: ${hateGreen.length + hateYellow.length} items`);
+    lines.push(`  Don't know / never tried: ${dunnoGreen.length + dunnoYellow.length} items`);
+    lines.push('===================================================');
+    lines.push('');
+    lines.push('Please create a detailed weekly keto meal plan based on');
+    lines.push('my preferences above. The plan should include 3 meals');
+    lines.push('and 2 snacks per day, with variety and interesting');
+    lines.push('combinations. Prioritize the foods I love, use the');
+    lines.push('"can eat sometimes" foods for variety, and completely');
+    lines.push('avoid the foods I hate.');
+    lines.push('');
+
+    const output = lines.join('\n');
+    document.getElementById('outputText').value = output;
+    document.getElementById('outputSection').classList.add('visible');
+    document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function groupBySubcategory(items) {
+    const groups = {};
+    items.forEach(item => {
+        if (!groups[item.sub]) groups[item.sub] = [];
+        groups[item.sub].push(item);
+    });
+    return groups;
+}
+
+function copyOutput() {
+    const text = document.getElementById('outputText').value;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✅ הועתק!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '📎 העתק הכל';
+            btn.classList.remove('copied');
+        }, 2500);
+    });
+}
+
+// ===================== LOCAL STORAGE =====================
+function saveToLocal() {
+    try {
+        localStorage.setItem('keto-ratings', JSON.stringify(ratings));
+    } catch(e) {}
+}
+
+function loadFromLocal() {
+    try {
+        const saved = localStorage.getItem('keto-ratings');
+        if (saved) ratings = JSON.parse(saved);
+    } catch(e) {}
+}
+
+// ===================== SCROLL TO TOP =====================
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scrollTop');
+    btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// ===================== INIT =====================
+loadFromLocal();
+renderAll();
+</script>
+
+</body>
+</html>

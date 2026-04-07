@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רשימת קניות - קטו</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 20px;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            padding: 30px 20px 20px;
+        }
+        header h1 {
+            font-size: 2em;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        header p { color: #7a8a9a; font-size: 0.95em; }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1em;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-copy {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(0,210,255,0.3);
+        }
+        .btn-copy:hover { box-shadow: 0 4px 20px rgba(0,210,255,0.5); transform: translateY(-1px); }
+        .btn-copy.copied { background: linear-gradient(135deg, #4caf50, #69f0ae); }
+        .btn-reset {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #a0a0c0;
+        }
+        .btn-reset:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+        .progress-bar {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+            color: #7a8a9a;
+        }
+        .progress-bar span { color: #69f0ae; font-weight: 700; }
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #69f0ae);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .category {
+            margin-bottom: 24px;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .category-header h2 {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #00d2ff;
+            flex: 1;
+        }
+        .category-count {
+            font-size: 0.8em;
+            color: #5a6a7a;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .item:hover { background: rgba(255,255,255,0.04); }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            font-size: 0.8em;
+            color: transparent;
+        }
+        .item.checked .checkbox {
+            border-color: #4caf50;
+            background: rgba(76,175,80,0.25);
+            color: #69f0ae;
+        }
+        .item.checked .item-text {
+            text-decoration: line-through;
+            opacity: 0.4;
+        }
+
+        .item-text { flex: 1; }
+        .item-name {
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .item-detail {
+            font-size: 0.82em;
+            color: #6a7a8a;
+        }
+        .item-qty {
+            font-size: 0.88em;
+            font-weight: 600;
+            color: #ffb74d;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .note {
+            margin-top: 6px;
+            padding: 10px 16px;
+            font-size: 0.85em;
+            color: #5a6a7a;
+            font-style: italic;
+        }
+
+        @media (max-width: 500px) {
+            header h1 { font-size: 1.5em; }
+            .item { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>רשימת קניות - קטו</h1>
+        <p>22 מתכונים לשבוע</p>
+    </header>
+
+    <div class="actions">
+        <button class="btn btn-copy" id="copyBtn" onclick="copyList()">העתק רשימה</button>
+        <button class="btn btn-reset" onclick="resetAll()">אפס סימונים</button>
+    </div>
+
+    <div class="progress-bar">
+        נקנו <span id="checkedCount">0</span> מתוך <span id="totalCount">0</span> פריטים
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div id="listContainer"></div>
+</div>
+
+<script>
+const data = [
+    {
+        name: "ביצים וחלב",
+        items: [
+            { name: "ביצים", qty: "2 קרטוני 12", detail: "סה\"כ 17 ביצים" },
+            { name: "חמאה", qty: "חבילה (200 גרם)", detail: "" },
+            { name: "שמנת מתוקה 38%", qty: "קרטון 250 מ\"ל", detail: "למוסקה" },
+        ]
+    },
+    {
+        name: "גבינות",
+        items: [
+            { name: "גבינת שמנת פילדלפיה", qty: "חבילה 200 גרם", detail: "" },
+            { name: "גבינה צהובה עמק / גאודה", qty: "חבילת 400 גרם", detail: "לרולים, צ'יפס, רולדי בייקון" },
+            { name: "צ'דר פרוס", qty: "חבילה ~200 גרם", detail: "6 פרוסות, לבורגרים" },
+            { name: "פטה", qty: "גביע 100 גרם", detail: "לשקשוקה וחביתה" },
+            { name: "חלומי", qty: "חבילה 200 גרם", detail: "" },
+            { name: "גבינת עיזים רכה", qty: "גליל קטן ~80 גרם", detail: "" },
+            { name: "מוצרלה מגורדת", qty: "שקית 100 גרם", detail: "" },
+            { name: "פרמזן", qty: "נתח 100 גרם", detail: "למוסקה ובולונז" },
+            { name: "לאבנה", qty: "גביע 200 גרם", detail: "" },
+        ]
+    },
+    {
+        name: "בשר בקר",
+        items: [
+            { name: "בשר בקר טחון 20% שומן", qty: "2.3 ק\"ג", detail: "בורגרים, קציצות, בולונז, מוסקה" },
+            { name: "בשר לתבשיל (צוואר / שפונדרה)", qty: "800 גרם", detail: "לקדרה" },
+            { name: "סטייק אנטריקוט", qty: "3 יח' (~750 גרם)", detail: "1 לבד + 2 עם פטריות" },
+        ]
+    },
+    {
+        name: "עוף",
+        items: [
+            { name: "שוקי עוף", qty: "8 יח' (~1 ק\"ג)", detail: "" },
+            { name: "כנפיים עוף", qty: "1 ק\"ג", detail: "" },
+        ]
+    },
+    {
+        name: "דגים ופירות ים",
+        items: [
+            { name: "קלמארי נקי (טבעות)", qty: "400 גרם", detail: "קפואים או טריים" },
+            { name: "טונה בשמן (קופסה)", qty: "1 קופסה", detail: "" },
+        ]
+    },
+    {
+        name: "בשר מעובד",
+        items: [
+            { name: "בייקון", qty: "2 חבילות (~400 גרם)", detail: "~19 פרוסות" },
+            { name: "סלאמי פרוס", qty: "חבילה ~150 גרם", detail: "~11 פרוסות" },
+        ]
+    },
+    {
+        name: "ירקות ופירות",
+        items: [
+            { name: "אבוקדו", qty: "3 יח'", detail: "בשלים" },
+            { name: "עגבניות", qty: "5 יח'", detail: "בשלות" },
+            { name: "עגבניות שרי", qty: "מארז קטן", detail: "" },
+            { name: "בצל", qty: "3 יח'", detail: "" },
+            { name: "בצל ירוק", qty: "2 צרורות", detail: "" },
+            { name: "שום", qty: "3 ראשים", detail: "~29 שיניים" },
+            { name: "פטריות שמפיניון", qty: "1 ק\"ג", detail: "" },
+            { name: "פטריות פורטובלו", qty: "500 גרם", detail: "למוסקה" },
+            { name: "לימון", qty: "2 יח'", detail: "" },
+            { name: "רוזמרין טרי", qty: "צרור אחד", detail: "" },
+        ]
+    },
+    {
+        name: "שימורים ורטבים",
+        items: [
+            { name: "עגבניות חתוכות בקופסה (ללא סוכר)", qty: "4 קופסאות", detail: "400 גרם כל אחת" },
+            { name: "רוטב עגבניות (ללא סוכר)", qty: "צנצנת קטנה", detail: "לפיצת ביצים" },
+            { name: "זיתים ירוקים", qty: "צנצנת", detail: "" },
+            { name: "זיתי קלמטה", qty: "צנצנת", detail: "ללאבנה" },
+            { name: "מיונז (ללא סוכר)", qty: "צנצנת / בקבוק", detail: "" },
+            { name: "רוטב סויה (ללא סוכר)", qty: "בקבוק", detail: "" },
+        ]
+    },
+    {
+        name: "מוצרי קטו",
+        items: [
+            { name: "לחמניות קטו", qty: "4 יח'", detail: "לבורגרים" },
+            { name: "לחם קטו", qty: "חבילה קטנה", detail: "ללאבנה (אופציונלי)" },
+            { name: "נודלס שירטאקי", qty: "2 חבילות (400 גרם)", detail: "" },
+            { name: "קמח שקדים", qty: "שקית קטנה", detail: "צריך 2 כפות בלבד" },
+        ]
+    },
+    {
+        name: "תבלינים (לבדוק שיש בבית)",
+        items: [
+            { name: "מלח / מלח גס", qty: "", detail: "" },
+            { name: "פלפל שחור (+ גרוס לסטייק)", qty: "", detail: "" },
+            { name: "פפריקה", qty: "", detail: "" },
+            { name: "כורכום", qty: "", detail: "" },
+            { name: "אורגנו", qty: "", detail: "" },
+            { name: "בזיליקום יבש", qty: "", detail: "" },
+        ]
+    },
+    {
+        name: "שמנים",
+        items: [
+            { name: "שמן זית כתית מעולה", qty: "בקבוק (אם אוזל)", detail: "" },
+        ]
+    },
+];
+
+const STORAGE_KEY = 'keto-shopping-checked';
+function loadChecked() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; } }
+function saveChecked(obj) { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
+
+function render() {
+    const container = document.getElementById('listContainer');
+    container.innerHTML = '';
+    const checked = loadChecked();
+    let total = 0;
+    let done = 0;
+
+    data.forEach((cat, ci) => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'category';
+
+        let catDone = 0;
+        cat.items.forEach((item, ii) => {
+            const key = ci + '-' + ii;
+            total++;
+            if (checked[key]) { done++; catDone++; }
+        });
+
+        catDiv.innerHTML = `<div class="category-header">
+            <h2>${cat.name}</h2>
+            <span class="category-count">${catDone}/${cat.items.length}</span>
+        </div>`;
+
+        cat.items.forEach((item, ii) => {
+            const key = ci + '-' + ii;
+            const isChecked = !!checked[key];
+            const row = document.createElement('div');
+            row.className = 'item' + (isChecked ? ' checked' : '');
+            row.innerHTML = `
+                <div class="checkbox">\u2713</div>
+                <div class="item-text">
+                    <div class="item-name">${item.name}</div>
+                    ${item.detail ? '<div class="item-detail">' + item.detail + '</div>' : ''}
+                </div>
+                ${item.qty ? '<div class="item-qty">' + item.qty + '</div>' : ''}
+            `;
+            row.addEventListener('click', () => {
+                const c = loadChecked();
+                if (c[key]) delete c[key]; else c[key] = true;
+                saveChecked(c);
+                render();
+            });
+            catDiv.appendChild(row);
+        });
+
+        container.appendChild(catDiv);
+    });
+
+    document.getElementById('checkedCount').textContent = done;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = (total ? (done / total * 100) : 0) + '%';
+}
+
+function resetAll() {
+    saveChecked({});
+    render();
+}
+
+function copyList() {
+    const lines = [];
+    lines.push('=== רשימת קניות קטו - 22 מתכונים ===');
+    lines.push('');
+    data.forEach(cat => {
+        lines.push(cat.name + ':');
+        cat.items.forEach(item => {
+            let line = '  - ' + item.name;
+            if (item.qty) line += ' — ' + item.qty;
+            if (item.detail) line += ' (' + item.detail + ')';
+            lines.push(line);
+        });
+        lines.push('');
+    });
+
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '\u2713 הועתק!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'העתק רשימה'; btn.classList.remove('copied'); }, 2500);
+    });
+}
+
+render();
+</script>
+
+</body>
+</html>

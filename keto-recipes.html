@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ספר המתכונים שלי - קטו</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(0,210,255,0.2);
+        }
+        .hero h1 {
+            font-size: 2.6em;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .hero p { color: #8899aa; font-size: 1.1em; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+
+        /* TOC */
+        .toc {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .toc h2 { color: #00d2ff; font-size: 1.5em; margin-bottom: 15px; }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }
+        .toc a {
+            color: #a0b0c0;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: block;
+            font-size: 0.92em;
+        }
+        .toc a:hover { background: rgba(0,210,255,0.1); color: #fff; }
+        .toc a .toc-num { color: #00d2ff; font-weight: 600; margin-left: 6px; }
+
+        /* Section headers */
+        .section-header {
+            padding: 25px;
+            margin: 50px 0 25px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        .section-header.breakfast {
+            background: linear-gradient(135deg, rgba(255,152,0,0.15), rgba(255,152,0,0.05));
+            border: 1px solid rgba(255,152,0,0.3);
+        }
+        .section-header.breakfast h2 { color: #ffb74d; }
+        .section-header.lunch {
+            background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(0,200,83,0.05));
+            border: 1px solid rgba(0,200,83,0.3);
+        }
+        .section-header.lunch h2 { color: #69f0ae; }
+        .section-header.snack {
+            background: linear-gradient(135deg, rgba(156,39,176,0.15), rgba(156,39,176,0.05));
+            border: 1px solid rgba(156,39,176,0.3);
+        }
+        .section-header.snack h2 { color: #ce93d8; }
+        .section-header h2 { font-size: 1.8em; font-weight: 800; }
+        .section-header p { color: #8899aa; margin-top: 5px; }
+
+        /* Recipe card */
+        .recipe {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .recipe:hover {
+            border-color: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+        }
+        .recipe-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .recipe-meta {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+            color: #7a8a9a;
+        }
+        .recipe-meta span { display: flex; align-items: center; gap: 4px; }
+        .recipe h4 {
+            color: #00d2ff;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin: 14px 0 8px;
+        }
+        .recipe ul {
+            list-style: none;
+            padding: 0;
+        }
+        .recipe ul li {
+            padding: 3px 0;
+            padding-right: 18px;
+            position: relative;
+            font-size: 0.93em;
+        }
+        .recipe ul li::before {
+            content: '•';
+            position: absolute;
+            right: 0;
+            color: #00d2ff;
+        }
+        .recipe ol {
+            padding-right: 20px;
+        }
+        .recipe ol li {
+            padding: 4px 0;
+            font-size: 0.93em;
+        }
+        .recipe .tip {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(255,193,7,0.08);
+            border: 1px solid rgba(255,193,7,0.2);
+            border-radius: 8px;
+            font-size: 0.88em;
+            color: #ffe082;
+        }
+
+        /* Tags */
+        .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        .tag {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        .tag.quick { background: rgba(0,200,83,0.15); color: #69f0ae; border: 1px solid rgba(0,200,83,0.3); }
+        .tag.medium { background: rgba(255,193,7,0.15); color: #ffe082; border: 1px solid rgba(255,193,7,0.3); }
+        .tag.slow { background: rgba(244,67,54,0.15); color: #ef9a9a; border: 1px solid rgba(244,67,54,0.3); }
+
+        /* Scroll top */
+        /* Crossed off */
+        .recipe.crossed-off {
+            opacity: 0.3;
+            position: relative;
+        }
+        .recipe.crossed-off .recipe-title {
+            text-decoration: line-through;
+            text-decoration-color: #f44336;
+            text-decoration-thickness: 2px;
+        }
+        .crossoff-btn {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid rgba(244,67,54,0.3);
+            background: rgba(244,67,54,0.08);
+            color: #ef9a9a;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-family: 'Heebo', sans-serif;
+            z-index: 2;
+        }
+        .crossoff-btn:hover {
+            background: rgba(244,67,54,0.25);
+            border-color: #f44336;
+            color: #fff;
+        }
+        .recipe.crossed-off .crossoff-btn {
+            background: rgba(76,175,80,0.15);
+            border-color: rgba(76,175,80,0.4);
+            color: #69f0ae;
+        }
+        .recipe.crossed-off .crossoff-btn:hover {
+            background: rgba(76,175,80,0.3);
+            border-color: #4caf50;
+            color: #fff;
+        }
+        .toc a.crossed-off {
+            text-decoration: line-through;
+            text-decoration-color: #f44336;
+            opacity: 0.35;
+        }
+
+        /* Week select button */
+        .select-btn {
+            position: absolute;
+            top: 14px;
+            left: 58px;
+            height: 36px;
+            padding: 0 14px;
+            border-radius: 18px;
+            border: 2px solid rgba(0,210,255,0.3);
+            background: rgba(0,210,255,0.08);
+            color: #80d8ff;
+            cursor: pointer;
+            font-size: 0.78em;
+            font-weight: 600;
+            font-family: 'Heebo', sans-serif;
+            transition: all 0.2s;
+            z-index: 2;
+            white-space: nowrap;
+        }
+        .select-btn:hover {
+            background: rgba(0,210,255,0.2);
+            border-color: #00d2ff;
+            color: #fff;
+        }
+        .recipe.selected-week .select-btn {
+            background: rgba(0,210,255,0.35);
+            border-color: #00d2ff;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(0,210,255,0.3);
+        }
+        .recipe.selected-week {
+            border-color: rgba(0,210,255,0.35);
+            box-shadow: 0 0 20px rgba(0,210,255,0.08);
+        }
+        .toc a.selected-week {
+            color: #00d2ff;
+            font-weight: 600;
+        }
+        .toc a.selected-week::before {
+            content: '\2713 ';
+            color: #00d2ff;
+        }
+
+        /* Sticky bottom bar */
+        .week-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15,15,26,0.97);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,210,255,0.2);
+            padding: 12px 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+        .week-bar.visible { display: flex; }
+        .week-bar-count {
+            color: #80d8ff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .week-bar-count span { color: #00d2ff; font-size: 1.2em; }
+        .week-bar-btn {
+            padding: 10px 28px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.95em;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .generate-list-btn {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(0,210,255,0.3);
+        }
+        .generate-list-btn:hover { box-shadow: 0 4px 20px rgba(0,210,255,0.5); transform: translateY(-1px); }
+        .clear-week-btn {
+            background: rgba(244,67,54,0.15);
+            border: 1px solid rgba(244,67,54,0.3);
+            color: #ef9a9a;
+        }
+        .clear-week-btn:hover { background: rgba(244,67,54,0.3); color: #fff; }
+
+        /* Output section */
+        .output-section {
+            display: none;
+            margin: 30px 0 80px;
+            padding: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .output-section.visible { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        .output-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .output-header h3 { font-size: 1.3em; font-weight: 700; color: #00d2ff; }
+        .copy-btn {
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            font-family: 'Heebo', sans-serif;
+            border: 2px solid #00d2ff;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+            color: #00d2ff;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: rgba(0,210,255,0.15); }
+        .copy-btn.copied { background: rgba(76,175,80,0.2); border-color: #4caf50; color: #69f0ae; }
+        .output-text {
+            width: 100%;
+            min-height: 400px;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.92em;
+            line-height: 1.8;
+            resize: vertical;
+            direction: rtl;
+        }
+        .output-text:focus { outline: none; border-color: rgba(0,210,255,0.4); }
+
+        .scroll-top {
+            position: fixed; bottom: 70px; left: 25px; width: 48px; height: 48px;
+            border-radius: 50%; background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff; border: none; cursor: pointer; font-size: 1.3em;
+            display: none; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 50;
+        }
+        .scroll-top.visible { display: flex; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.6em; }
+            .recipe { padding: 20px; }
+            .recipe-title { font-size: 1.1em; }
+            .select-btn { top: auto; bottom: 14px; left: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>ספר המתכונים שלי - קטו</h1>
+    <p>מתכונים טעימים וקלים להכנה, מבוססים על המזונות שאני אוהב</p>
+</div>
+
+<div class="container">
+
+<!-- ==================== TOC ==================== -->
+<div class="toc">
+    <h2>תוכן עניינים</h2>
+
+    <h4 style="color:#ffb74d; margin: 12px 0 8px;">ארוחות בוקר / ערב (קטנות)</h4>
+    <div class="toc-grid">
+        <a href="#r1"><span class="toc-num">1.</span> חביתת גבינות משולשת</a>
+        <a href="#r2"><span class="toc-num">2.</span> ביצת עין עם בייקון ואבוקדו</a>
+        <a href="#r3"><span class="toc-num">3.</span> שקשוקה קטו</a>
+        <a href="#r4"><span class="toc-num">4.</span> סלמון מעושן עם גבינת שמנת</a>
+        <a href="#r5"><span class="toc-num">5.</span> חלומי מטוגן עם עגבניות</a>
+        <a href="#r6"><span class="toc-num">6.</span> טוסט קטו עם אבוקדו וביצה</a>
+        <a href="#r7"><span class="toc-num">7.</span> גביע קוטג' עם תותים</a>
+        <a href="#r8"><span class="toc-num">8.</span> ביצים מקושקשות עם סלמון מעושן</a>
+        <a href="#r9"><span class="toc-num">9.</span> רולים של סלאמי וגבינה</a>
+        <a href="#r10"><span class="toc-num">10.</span> לאבנה עם שמן זית וזיתים</a>
+        <a href="#r11"><span class="toc-num">11.</span> מאפינס ביצים עם גבינה ובייקון</a>
+        <a href="#r12"><span class="toc-num">12.</span> סלט טונה קטו</a>
+        <a href="#r13"><span class="toc-num">13.</span> פנקייק גבינה מהיר</a>
+        <a href="#r14"><span class="toc-num">14.</span> קערת יוגורט יווני עם פירות יער</a>
+        <a href="#r15"><span class="toc-num">15.</span> פיצה ביצים במחבת</a>
+        <a href="#r16"><span class="toc-num">16.</span> חביתת פטריות וגבינת עיזים</a>
+        <a href="#r17"><span class="toc-num">17.</span> כריך קטו עם פסטרמה</a>
+        <a href="#r18"><span class="toc-num">18.</span> ביצים קשות ממולאות אבוקדו</a>
+        <a href="#r19"><span class="toc-num">19.</span> קרפ קטו עם גבינת שמנת</a>
+        <a href="#r20"><span class="toc-num">20.</span> צלחת אנטיפסטי</a>
+    </div>
+
+    <h4 style="color:#69f0ae; margin: 18px 0 8px;">ארוחות צהריים (גדולות)</h4>
+    <div class="toc-grid">
+        <a href="#r21"><span class="toc-num">21.</span> סטייק אנטריקוט עם חמאת שום</a>
+        <a href="#r22"><span class="toc-num">22.</span> שוקי עוף בתנור עם פטריות</a>
+        <a href="#r23"><span class="toc-num">23.</span> המבורגר קטו מושלם</a>
+        <a href="#r24"><span class="toc-num">24.</span> סלמון צרוב במחבת</a>
+        <a href="#r25"><span class="toc-num">25.</span> כנפיים עוף פריכות בתנור</a>
+        <a href="#r26"><span class="toc-num">26.</span> כרעיים עוף בפפריקה מעושנת</a>
+        <a href="#r27"><span class="toc-num">27.</span> קציצות בקר ברוטב עגבניות</a>
+        <a href="#r28"><span class="toc-num">28.</span> חזה עוף ממולא גבינה ובייקון</a>
+        <a href="#r29"><span class="toc-num">29.</span> פיצה קטו</a>
+        <a href="#r30"><span class="toc-num">30.</span> טלה בתנור עם שום ורוזמרין</a>
+        <a href="#r31"><span class="toc-num">31.</span> פסטה שירטאקי בולונז</a>
+        <a href="#r32"><span class="toc-num">32.</span> שניצל קטו פריך</a>
+        <a href="#r33"><span class="toc-num">33.</span> סלמון בתנור ברוטב שמנת</a>
+        <a href="#r34"><span class="toc-num">34.</span> קדרת בשר בקר</a>
+        <a href="#r35"><span class="toc-num">35.</span> שוקי עוף במילוי גבינת שמנת</a>
+        <a href="#r36"><span class="toc-num">36.</span> קלמארי מוקפץ עם שום וחמאה</a>
+        <a href="#r37"><span class="toc-num">37.</span> כרוב ממולא בבשר</a>
+        <a href="#r38"><span class="toc-num">38.</span> חזה עוף בפפריקה ושמנת</a>
+        <a href="#r39"><span class="toc-num">39.</span> מוסקה קטו (ללא חציל)</a>
+        <a href="#r40"><span class="toc-num">40.</span> חזיר צלוי עם שום ורוזמרין</a>
+        <a href="#r41"><span class="toc-num">41.</span> בורגר כפול עם בייקון וגבינה</a>
+        <a href="#r42"><span class="toc-num">42.</span> עוף שלם בתנור</a>
+        <a href="#r43"><span class="toc-num">43.</span> תבשיל כנפיים ברוטב סויה</a>
+        <a href="#r44"><span class="toc-num">44.</span> קציצות עוף עם פטריות</a>
+        <a href="#r45"><span class="toc-num">45.</span> סטייק על הפלנצ'ה עם פטריות</a>
+    </div>
+
+    <h4 style="color:#ce93d8; margin: 18px 0 8px;">חטיפים ונשנושים</h4>
+    <div class="toc-grid">
+        <a href="#r46"><span class="toc-num">46.</span> צ'יפס גבינה (קריספים)</a>
+        <a href="#r47"><span class="toc-num">47.</span> כדורי גבינת שמנת ובייקון</a>
+        <a href="#r48"><span class="toc-num">48.</span> אבוקדו ממולא טונה</a>
+        <a href="#r49"><span class="toc-num">49.</span> שקדים קלויים מתובלים</a>
+        <a href="#r50"><span class="toc-num">50.</span> רולדי בייקון וגבינה</a>
+    </div>
+</div>
+
+<!-- ==================== BREAKFAST / DINNER ==================== -->
+<div class="section-header breakfast" id="breakfast-section">
+    <h2>ארוחות בוקר / ערב</h2>
+    <p>מנות קטנות, מהירות ומשביעות</p>
+</div>
+
+<!-- 1 -->
+<div class="recipe" id="r1">
+    <div class="recipe-title">1. חביתת גבינות משולשת</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>3 ביצים</li>
+        <li>30 גרם גבינה צהובה (עמק / צ'דר) מגורדת</li>
+        <li>כף גבינת שמנת (פילדלפיה)</li>
+        <li>20 גרם פטה מפוררת</li>
+        <li>כף חמאה</li>
+        <li>מלח, פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>טורפים את הביצים עם מלח ופלפל.</li>
+        <li>מחממים חמאה במחבת על אש בינונית.</li>
+        <li>שופכים את הביצים, מפזרים את הגבינה הצהובה מגורדת על חצי מהחביתה.</li>
+        <li>כשהחביתה מתחילה להתגבש, מניחים נקודות של גבינת שמנת ופטה על אותו צד.</li>
+        <li>מקפלים את החביתה לחצי, מבשלים עוד דקה.</li>
+    </ol>
+    <div class="tip">טיפ: אפשר להחליף את הפטה בגבינת עיזים רכה לטעם שונה.</div>
+</div>
+
+<!-- 2 -->
+<div class="recipe" id="r2">
+    <div class="recipe-title">2. ביצת עין עם בייקון ואבוקדו</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>8 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 ביצים</li>
+        <li>3 פרוסות בייקון</li>
+        <li>חצי אבוקדו בשל</li>
+        <li>כף שמן זית</li>
+        <li>מלח גס, פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מטגנים את הבייקון במחבת עד שנהיה פריך. מניחים בצד על נייר סופג.</li>
+        <li>באותו שומן שנשאר מהבייקון, טוגנים 2 ביצי עין.</li>
+        <li>פורסים את האבוקדו.</li>
+        <li>מגישים הכל על צלחת — ביצים, בייקון פריך, ואבוקדו פרוס. מתבלים במלח גס ופלפל.</li>
+    </ol>
+</div>
+
+<!-- 3 -->
+<div class="recipe" id="r3">
+    <div class="recipe-title">3. שקשוקה קטו</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>15 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>4 ביצים</li>
+        <li>4 עגבניות בשלות (או קופסת עגבניות חתוכות ללא סוכר)</li>
+        <li>חצי בצל קטן קצוץ דק</li>
+        <li>2 שיני שום כתושות</li>
+        <li>2 כפות שמן זית</li>
+        <li>כפית פפריקה</li>
+        <li>כפית כורכום</li>
+        <li>מלח, פלפל שחור</li>
+        <li>50 גרם פטה מפוררת (אופציונלי)</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים שמן זית במחבת עמוקה. מטגנים בצל עד שמזהיב (2–3 דקות).</li>
+        <li>מוסיפים שום, פפריקה וכורכום, מערבבים חצי דקה.</li>
+        <li>מוסיפים עגבניות חתוכות, מלח ופלפל. מבשלים 7–8 דקות עד שהרוטב מתעבה.</li>
+        <li>יוצרים 4 גומחות ברוטב ושוברים לתוכן ביצים.</li>
+        <li>מכסים ומבשלים 4–5 דקות עד שהלבן קפא אבל החלמון עדיין רך.</li>
+        <li>מפזרים פטה מפוררת ומגישים ישר מהמחבת.</li>
+    </ol>
+</div>
+
+<!-- 4 -->
+<div class="recipe" id="r4">
+    <div class="recipe-title">4. סלמון מעושן עם גבינת שמנת על לחם קטו</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 פרוסות לחם קטו</li>
+        <li>3 כפות גבינת שמנת (פילדלפיה)</li>
+        <li>80 גרם סלמון מעושן</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>כפית שמן זית</li>
+        <li>סחיטת לימון</li>
+        <li>שמיר יבש או טרי</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מורחים גבינת שמנת בשכבה נדיבה על פרוסות הלחם הקטו.</li>
+        <li>מסדרים פרוסות סלמון מעושן מעל.</li>
+        <li>מפזרים בצל ירוק קצוץ ושמיר.</li>
+        <li>מזלפים שמן זית וסוחטים לימון מעל.</li>
+    </ol>
+</div>
+
+<!-- 5 -->
+<div class="recipe" id="r5">
+    <div class="recipe-title">5. חלומי מטוגן עם עגבניות שרי</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>150 גרם גבינת חלומי פרוסה לפרוסות של 1 ס"מ</li>
+        <li>8 עגבניות שרי חצויות</li>
+        <li>כף שמן זית</li>
+        <li>מלח, פלפל שחור</li>
+        <li>אורגנו</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים מחבת יבשה (ללא שמן) על אש גבוהה.</li>
+        <li>מטגנים את פרוסות החלומי 2 דקות מכל צד עד שמוזהבות.</li>
+        <li>מוציאים את החלומי. באותה מחבת מוסיפים שמן זית ומטגנים את העגבניות שרי דקה–שתיים.</li>
+        <li>מגישים חלומי עם עגבניות, מתבלים באורגנו, מלח ופלפל.</li>
+    </ol>
+    <div class="tip">טיפ: אפשר לסחוט לימון מעל לפני ההגשה — מוסיף רעננות.</div>
+</div>
+
+<!-- 6 -->
+<div class="recipe" id="r6">
+    <div class="recipe-title">6. טוסט קטו עם אבוקדו וביצה</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 פרוסות לחם קטו, קלויות בטוסטר</li>
+        <li>חצי אבוקדו מרוסק עם מזלג</li>
+        <li>ביצת עין אחת</li>
+        <li>מלח גס, פלפל שחור</li>
+        <li>כפית שמן זית</li>
+        <li>אופציונלי: פרוסות עגבנייה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>קולים את הלחם הקטו בטוסטר עד שפריך.</li>
+        <li>מורחים אבוקדו מרוסק על הלחם.</li>
+        <li>מניחים ביצת עין מעל.</li>
+        <li>מתבלים במלח גס ופלפל שחור.</li>
+    </ol>
+</div>
+
+<!-- 7 -->
+<div class="recipe" id="r7">
+    <div class="recipe-title">7. גביע קוטג' עם תותים ושקדים</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>200 גרם קוטג' 5%</li>
+        <li>5–6 תותים חתוכים</li>
+        <li>קומץ שקדים גולמיים</li>
+        <li>כפית שמן זית</li>
+        <li>קורט מלח</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>שמים את הקוטג' בקערה.</li>
+        <li>מסדרים תותים חתוכים ושקדים מעל.</li>
+        <li>מזלפים שמן זית וקורט מלח.</li>
+    </ol>
+</div>
+
+<!-- 8 -->
+<div class="recipe" id="r8">
+    <div class="recipe-title">8. ביצים מקושקשות עם סלמון מעושן</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>3 ביצים</li>
+        <li>60 גרם סלמון מעושן קרוע לחתיכות</li>
+        <li>כף חמאה</li>
+        <li>כף שמנת מתוקה (38%)</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>מלח, פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>טורפים ביצים עם שמנת, מלח ופלפל.</li>
+        <li>ממיסים חמאה במחבת על אש נמוכה-בינונית.</li>
+        <li>שופכים את הביצים ומערבבים לאט עם כף עד שמתקבל סקרמבל רך וקרמי.</li>
+        <li>ממש בסוף מוסיפים את חתיכות הסלמון המעושן ומערבבים בעדינות.</li>
+        <li>מגישים עם בצל ירוק מעל.</li>
+    </ol>
+    <div class="tip">טיפ: הסוד לסקרמבל מושלם — אש נמוכה וסבלנות. לא ממהרים!</div>
+</div>
+
+<!-- 9 -->
+<div class="recipe" id="r9">
+    <div class="recipe-title">9. רולים של סלאמי וגבינה</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>8 פרוסות סלאמי דקות</li>
+        <li>4 כפות גבינת שמנת</li>
+        <li>4 פרוסות גבינה צהובה (עמק / גאודה)</li>
+        <li>זיתים ירוקים חצויים</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>על כל פרוסת סלאמי מורחים מעט גבינת שמנת.</li>
+        <li>מניחים חצי פרוסת גבינה צהובה וחצי זית.</li>
+        <li>מגלגלים לרול הדוק.</li>
+        <li>מחזיקים עם קיסם אם צריך. מגישים כנשנוש או ארוחה קלה.</li>
+    </ol>
+</div>
+
+<!-- 10 -->
+<div class="recipe" id="r10">
+    <div class="recipe-title">10. לאבנה עם שמן זית וזיתים</div>
+    <div class="recipe-meta">
+        <span>2 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>150 גרם לאבנה</li>
+        <li>2 כפות שמן זית כתית מעולה</li>
+        <li>זיתי קלמטה</li>
+        <li>פפריקה</li>
+        <li>פרוסת לחם קטו (אופציונלי)</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מורחים לאבנה על צלחת או בקערה.</li>
+        <li>יוצרים שקע באמצע ושופכים שמן זית נדיב.</li>
+        <li>מפזרים פפריקה ומסדרים זיתי קלמטה מסביב.</li>
+        <li>מגישים עם לחם קטו לטבילה.</li>
+    </ol>
+</div>
+
+<!-- 11 -->
+<div class="recipe" id="r11">
+    <div class="recipe-title">11. מאפינס ביצים עם גבינה ובייקון</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>20 דקות בישול</span>
+        <span>6 מאפינס</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>6 ביצים</li>
+        <li>4 פרוסות בייקון חתוכות לקוביות קטנות</li>
+        <li>60 גרם גבינה צהובה מגורדת</li>
+        <li>2 כפות שמנת מתוקה</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>מלח, פלפל שחור</li>
+        <li>חמאה למשיחת התבנית</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-180 מעלות. משמנים תבנית מאפינס בחמאה.</li>
+        <li>מטגנים בייקון במחבת עד שפריך.</li>
+        <li>טורפים ביצים עם שמנת, מלח ופלפל.</li>
+        <li>מחלקים את הבייקון לתוך 6 שקעי המאפינס.</li>
+        <li>שופכים תערובת ביצים מעל ומפזרים גבינה ובצל ירוק.</li>
+        <li>אופים 18–20 דקות עד שהביצים קופאות ומוזהבות.</li>
+    </ol>
+    <div class="tip">טיפ: מכינים מראש ושומרים במקרר עד 3 ימים. מחממים במיקרו 30 שניות.</div>
+</div>
+
+<!-- 12 -->
+<div class="recipe" id="r12">
+    <div class="recipe-title">12. סלט טונה קטו</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>קופסת טונה בשמן (מסוננת)</li>
+        <li>2 כפות מיונז</li>
+        <li>חצי אבוקדו חתוך לקוביות</li>
+        <li>4 זיתים ירוקים חצויים</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>סחיטת לימון</li>
+        <li>מלח, פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מפוררים את הטונה בקערה.</li>
+        <li>מוסיפים מיונז, אבוקדו, זיתים ובצל ירוק.</li>
+        <li>סוחטים לימון, מתבלים במלח ופלפל ומערבבים בעדינות.</li>
+        <li>אפשר להגיש על לחם קטו, או כמו שזה בקערה.</li>
+    </ol>
+</div>
+
+<!-- 13 -->
+<div class="recipe" id="r13">
+    <div class="recipe-title">13. פנקייק גבינה מהיר (2 מצרכים)</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 ביצים</li>
+        <li>60 גרם גבינת שמנת (פילדלפיה)</li>
+        <li>כף קמח שקדים (אופציונלי — למרקם יציב יותר)</li>
+        <li>חמאה לטיגון</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים ביצים וגבינת שמנת (וקמח שקדים אם משתמשים) עד לתערובת חלקה. אפשר בבלנדר.</li>
+        <li>מחממים חמאה במחבת על אש בינונית-נמוכה.</li>
+        <li>שופכים כפות של תערובת ליצירת פנקייקים קטנים.</li>
+        <li>מטגנים 2 דקות מכל צד.</li>
+        <li>מגישים עם שמנת חמוצה, או גבינת שמנת ותותים.</li>
+    </ol>
+</div>
+
+<!-- 14 -->
+<div class="recipe" id="r14">
+    <div class="recipe-title">14. קערת יוגורט יווני עם פירות יער</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>200 גרם יוגורט יווני מלא שומן (ללא סוכר)</li>
+        <li>5 תותים חתוכים</li>
+        <li>קומץ קטן אוכמניות</li>
+        <li>קומץ קטן פטל</li>
+        <li>כף שקדים פרוסים</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>שמים יוגורט בקערה.</li>
+        <li>מסדרים פירות יער ושקדים מעל.</li>
+        <li>אוכלים מיד.</li>
+    </ol>
+    <div class="tip">טיפ: הכמויות של הפירות צריכות להיות מתונות — עד 80 גרם סך הכל — כדי להישאר בקטו.</div>
+</div>
+
+<!-- 15 -->
+<div class="recipe" id="r15">
+    <div class="recipe-title">15. פיצת ביצים במחבת</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>8 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>3 ביצים טרופות</li>
+        <li>2 כפות רוטב עגבניות (ללא סוכר)</li>
+        <li>50 גרם מוצרלה מגורדת</li>
+        <li>3 פרוסות סלאמי</li>
+        <li>זיתים ירוקים פרוסים</li>
+        <li>אורגנו</li>
+        <li>כף שמן זית</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים שמן זית במחבת על אש בינונית.</li>
+        <li>שופכים את הביצים הטרופות ומפזרים שווה במחבת.</li>
+        <li>כשהתחתית מתגבשת, מורחים רוטב עגבניות מעל.</li>
+        <li>מפזרים מוצרלה, סלאמי וזיתים.</li>
+        <li>מכסים ומבשלים 3–4 דקות עד שהגבינה נמסה.</li>
+        <li>מפזרים אורגנו ומגישים.</li>
+    </ol>
+</div>
+
+<!-- 16 -->
+<div class="recipe" id="r16">
+    <div class="recipe-title">16. חביתת פטריות וגבינת עיזים</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>8 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>3 ביצים</li>
+        <li>100 גרם פטריות שמפיניון פרוסות</li>
+        <li>40 גרם גבינת עיזים רכה</li>
+        <li>כף חמאה</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>מלח, פלפל, אורגנו</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>ממיסים חמאה במחבת. מטגנים פטריות על אש גבוהה עד שמוזהבות ומאבדות נוזלים (3–4 דקות).</li>
+        <li>מורידים אש לבינונית, שופכים ביצים טרופות עם מלח ופלפל.</li>
+        <li>כשהחביתה מתחילה להתגבש, מפזרים גבינת עיזים מפוררת על חצי.</li>
+        <li>מקפלים, מבשלים עוד דקה.</li>
+        <li>מגישים עם בצל ירוק ואורגנו מעל.</li>
+    </ol>
+</div>
+
+<!-- 17 -->
+<div class="recipe" id="r17">
+    <div class="recipe-title">17. כריך קטו עם פסטרמה</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>2 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 פרוסות לחם קטו</li>
+        <li>80 גרם פסטרמה</li>
+        <li>פרוסת גבינה צהובה (עמק / גאודה)</li>
+        <li>כף מיונז</li>
+        <li>בצל ירוק</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>קולים את הלחם הקטו.</li>
+        <li>מורחים מיונז על פרוסה אחת.</li>
+        <li>מסדרים פסטרמה, גבינה ובצל ירוק.</li>
+        <li>סוגרים ואוכלים. אפשר לחמם בטוסטר עם הגבינה כדי שתימס.</li>
+    </ol>
+</div>
+
+<!-- 18 -->
+<div class="recipe" id="r18">
+    <div class="recipe-title">18. ביצים קשות ממולאות אבוקדו</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>12 דקות בישול</span>
+        <span>4 מנות (חטיף)</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>4 ביצים קשות</li>
+        <li>חצי אבוקדו בשל</li>
+        <li>כף מיונז</li>
+        <li>סחיטת לימון</li>
+        <li>מלח, פלפל שחור, פפריקה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מבשלים ביצים קשות (12 דקות מרתיחה). מקלפים וחותכים לאורך.</li>
+        <li>מוציאים את החלמונים לקערה.</li>
+        <li>מוסיפים אבוקדו, מיונז, לימון, מלח ופלפל. מרסקים עם מזלג לתערובת חלקה.</li>
+        <li>ממלאים את חללי הביצים בתערובת.</li>
+        <li>מפזרים פפריקה מעל ומגישים.</li>
+    </ol>
+</div>
+
+<!-- 19 -->
+<div class="recipe" id="r19">
+    <div class="recipe-title">19. קרפ קטו עם גבינת שמנת ותותים</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 ביצים</li>
+        <li>60 גרם גבינת שמנת</li>
+        <li>2 כפות קמח שקדים</li>
+        <li>כף חמאה לטיגון</li>
+        <li>למילוי: גבינת שמנת נוספת, תותים פרוסים, שמנת מתוקה להקצפה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים ביצים, גבינת שמנת וקמח שקדים עד לתערובת חלקה.</li>
+        <li>ממיסים חמאה במחבת על אש בינונית-נמוכה.</li>
+        <li>שופכים חצי מהתערובת, מסובבים את המחבת ליצירת שכבה דקה.</li>
+        <li>מטגנים דקה וחצי מכל צד.</li>
+        <li>ממלאים בגבינת שמנת, תותים פרוסים ושמנת מוקצפת. מקפלים ומגישים.</li>
+    </ol>
+</div>
+
+<!-- 20 -->
+<div class="recipe" id="r20">
+    <div class="recipe-title">20. צלחת אנטיפסטי</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>פרוסות סלאמי ופסטרמה</li>
+        <li>גבינת ברי חתוכה לנתחים</li>
+        <li>גבינה צהובה (עמק/גאודה) בקוביות</li>
+        <li>פטה בקוביות</li>
+        <li>זיתים ירוקים וקלמטה</li>
+        <li>חצי אבוקדו פרוס</li>
+        <li>שקדים קלויים</li>
+        <li>שמן זית לזילוף</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מסדרים את כל המצרכים על צלחת גדולה או קרש.</li>
+        <li>מזלפים שמן זית.</li>
+        <li>זהו. ארוחה שלמה בלי לבשל.</li>
+    </ol>
+</div>
+
+<!-- ==================== LUNCH ==================== -->
+<div class="section-header lunch" id="lunch-section">
+    <h2>ארוחות צהריים</h2>
+    <p>מנות גדולות ומשביעות</p>
+</div>
+
+<!-- 21 -->
+<div class="recipe" id="r21">
+    <div class="recipe-title">21. סטייק אנטריקוט עם חמאת שום</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>סטייק אנטריקוט (250–300 גרם), בטמפרטורת החדר</li>
+        <li>מלח גס, פלפל שחור גרוס</li>
+        <li>כף שמן זית</li>
+        <li>30 גרם חמאה</li>
+        <li>2 שיני שום כתושות</li>
+        <li>ענף רוזמרין טרי (או כפית יבש)</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מתבלים את הסטייק נדיב במלח גס ופלפל מכל הצדדים.</li>
+        <li>מחממים מחבת ברזל/יצוקה על אש גבוהה מאוד עם שמן זית.</li>
+        <li>מניחים את הסטייק ולא מזיזים — 3 דקות לצד הראשון, הופכים, 3 דקות לצד השני (מדיום).</li>
+        <li>מורידים אש, מוסיפים חמאה, שום ורוזמרין למחבת.</li>
+        <li>מטפטפים את החמאה המומסת על הסטייק עם כף למשך דקה.</li>
+        <li>מוציאים ונותנים לנוח 5 דקות לפני חיתוך.</li>
+    </ol>
+    <div class="tip">טיפ: הסטייק חייב להיות בטמפרטורת החדר לפני הטיגון — להוציא מהמקרר 30 דקות מראש.</div>
+</div>
+
+<!-- 22 -->
+<div class="recipe" id="r22">
+    <div class="recipe-title">22. שוקי עוף בתנור עם פטריות</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>45 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>8 שוקי עוף</li>
+        <li>300 גרם פטריות שמפיניון חצויות</li>
+        <li>4 שיני שום שלמות (בקליפה)</li>
+        <li>3 כפות שמן זית</li>
+        <li>כפית פפריקה</li>
+        <li>כפית כורכום</li>
+        <li>כפית אורגנו</li>
+        <li>מלח, פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מתבלים שוקיים במלח, פלפל, פפריקה, כורכום ואורגנו. מזלפים שמן זית.</li>
+        <li>מסדרים בתבנית. מפזרים פטריות ושיני שום מסביב.</li>
+        <li>אופים 40–45 דקות עד שהעור פריך ומוזהב.</li>
+        <li>מגישים שוקיים עם הפטריות הצלויות והשום הרך.</li>
+    </ol>
+</div>
+
+<!-- 23 -->
+<div class="recipe" id="r23">
+    <div class="recipe-title">23. המבורגר קטו מושלם</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>400 גרם בשר בקר טחון (20% שומן)</li>
+        <li>מלח, פלפל שחור</li>
+        <li>2 לחמניות קטו</li>
+        <li>2 פרוסות צ'דר</li>
+        <li>4 פרוסות בייקון (מטוגן פריך)</li>
+        <li>פרוסות אבוקדו</li>
+        <li>מיונז</li>
+        <li>עגבנייה פרוסה (אופציונלי)</li>
+        <li>בצל ירוק</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחלקים את הבשר ל-2 קציצות שטוחות. מתבלים נדיב במלח ופלפל מבחוץ בלבד (לא מערבבים לתוך הבשר).</li>
+        <li>מחממים מחבת או גריל על אש גבוהה. צורבים 4 דקות מכל צד.</li>
+        <li>דקה לפני הסוף מניחים פרוסת צ'דר על כל קציצה ומכסים כדי שתימס.</li>
+        <li>חוצים לחמנייה קטו, מורחים מיונז, מסדרים קציצה, בייקון, אבוקדו ובצל ירוק.</li>
+    </ol>
+    <div class="tip">טיפ: אל תלחצו על הקציצה בזמן הטיגון! זה מוציא את כל המיצים.</div>
+</div>
+
+<!-- 24 -->
+<div class="recipe" id="r24">
+    <div class="recipe-title">24. סלמון צרוב במחבת</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>8 דקות בישול</span>
+        <span>מנה אחת</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>פילה סלמון (200 גרם) עם עור</li>
+        <li>כף שמן זית</li>
+        <li>מלח, פלפל שחור</li>
+        <li>20 גרם חמאה</li>
+        <li>שן שום כתושה</li>
+        <li>סחיטת לימון</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מייבשים את הסלמון היטב עם נייר. מתבלים במלח ופלפל.</li>
+        <li>מחממים שמן במחבת על אש גבוהה.</li>
+        <li>מניחים את הסלמון צד העור למטה. לוחצים קלות בכף. מטגנים 4 דקות ללא הזזה.</li>
+        <li>הופכים, מורידים אש, מוסיפים חמאה ושום. מטגנים עוד 3 דקות.</li>
+        <li>מרימים מהמחבת, סוחטים לימון מעל.</li>
+    </ol>
+    <div class="tip">טיפ: הסוד לעור פריך — הסלמון חייב להיות יבש לגמרי לפני שנכנס למחבת.</div>
+</div>
+
+<!-- 25 -->
+<div class="recipe" id="r25">
+    <div class="recipe-title">25. כנפיים עוף פריכות בתנור</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>45 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>1 ק"ג כנפיים עוף</li>
+        <li>2 כפות שמן זית</li>
+        <li>כפית מלח</li>
+        <li>כפית פפריקה</li>
+        <li>חצי כפית פלפל שחור</li>
+        <li>חצי כפית שום אבקה</li>
+        <li>חצי כפית אורגנו</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-220 מעלות. מרפדים תבנית בנייר אפייה.</li>
+        <li>מייבשים כנפיים היטב (חשוב לפריכות!).</li>
+        <li>מערבבים את כל התבלינים בקערה עם שמן הזית.</li>
+        <li>מוסיפים כנפיים ומערבבים שיהיו מצופות שווה.</li>
+        <li>מסדרים בשכבה אחת על התבנית, לא צפוף.</li>
+        <li>אופים 25 דקות, הופכים, ועוד 20 דקות עד שפריכות ומוזהבות.</li>
+    </ol>
+    <div class="tip">טיפ: לפריכות מקסימלית — מייבשים את הכנפיים עם נייר מטבח ומוודאים שהתנור חם לגמרי לפני שמכניסים.</div>
+</div>
+
+<!-- 26 -->
+<div class="recipe" id="r26">
+    <div class="recipe-title">26. כרעיים עוף בפפריקה מעושנת</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>50 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>8 כרעיים עוף</li>
+        <li>2 כפות שמן זית</li>
+        <li>2 כפיות פפריקה (אם יש מעושנת — מעולה)</li>
+        <li>כפית כורכום</li>
+        <li>כפית מלח</li>
+        <li>חצי כפית פלפל שחור</li>
+        <li>4 שיני שום כתושות</li>
+        <li>סחיטת לימון</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מערבבים שמן זית, שום וכל התבלינים לפייסט.</li>
+        <li>מורחים את הפייסט על הכרעיים מכל הצדדים, כולל מתחת לעור.</li>
+        <li>מסדרים בתבנית, סוחטים לימון מעל.</li>
+        <li>אופים 45–50 דקות עד שהעור מוזהב ופריך.</li>
+    </ol>
+</div>
+
+<!-- 27 -->
+<div class="recipe" id="r27">
+    <div class="recipe-title">27. קציצות בקר ברוטב עגבניות</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>30 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>500 גרם בשר בקר טחון</li>
+        <li>ביצה אחת</li>
+        <li>2 כפות קמח שקדים</li>
+        <li>כפית מלח</li>
+        <li>חצי כפית פלפל שחור</li>
+        <li>כפית פפריקה</li>
+        <li><b>לרוטב:</b></li>
+        <li>קופסת עגבניות חתוכות (400 גרם, ללא סוכר)</li>
+        <li>חצי בצל קצוץ דק</li>
+        <li>2 שיני שום כתושות</li>
+        <li>2 כפות שמן זית</li>
+        <li>כפית אורגנו</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים בשר טחון, ביצה, קמח שקדים ותבלינים. מגלגלים לכדורים בגודל אגוז.</li>
+        <li>מחממים שמן זית בסיר רחב. מטגנים את הקציצות מכל הצדדים עד שמוזהבות (3–4 דקות). מוציאים בצד.</li>
+        <li>באותו סיר מטגנים בצל עד שמזהיב, מוסיפים שום, מערבבים דקה.</li>
+        <li>מוסיפים עגבניות חתוכות, אורגנו, מלח ופלפל. מביאים לרתיחה.</li>
+        <li>מחזירים את הקציצות לרוטב, מורידים אש ומבשלים 20–25 דקות עם מכסה חלקי.</li>
+    </ol>
+</div>
+
+<!-- 28 -->
+<div class="recipe" id="r28">
+    <div class="recipe-title">28. חזה עוף ממולא גבינה ובייקון</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>25 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 חזות עוף גדולות</li>
+        <li>60 גרם גבינת שמנת</li>
+        <li>40 גרם מוצרלה מגורדת</li>
+        <li>4 פרוסות בייקון</li>
+        <li>מלח, פלפל, פפריקה</li>
+        <li>כף שמן זית</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-190 מעלות.</li>
+        <li>חותכים כיס בכל חזה עוף (חתך אופקי, בלי לחתוך עד הסוף).</li>
+        <li>ממלאים כל כיס בגבינת שמנת ומוצרלה.</li>
+        <li>עוטפים כל חזה ב-2 פרוסות בייקון ומהדקים עם קיסמים.</li>
+        <li>מתבלים מבחוץ במלח, פלפל ופפריקה.</li>
+        <li>צורבים במחבת חמה עם שמן זית דקה מכל צד.</li>
+        <li>מעבירים לתנור ואופים 20–25 דקות עד שהבייקון פריך והעוף מבושל.</li>
+    </ol>
+</div>
+
+<!-- 29 -->
+<div class="recipe" id="r29">
+    <div class="recipe-title">29. פיצה קטו (בסיס גבינה)</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>15 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li><b>לבסיס:</b></li>
+        <li>200 גרם מוצרלה מגורדת</li>
+        <li>50 גרם קמח שקדים</li>
+        <li>30 גרם גבינת שמנת</li>
+        <li>ביצה אחת</li>
+        <li><b>לציפוי:</b></li>
+        <li>3 כפות רוטב עגבניות (ללא סוכר)</li>
+        <li>100 גרם מוצרלה נוספת</li>
+        <li>פרוסות סלאמי</li>
+        <li>זיתים ירוקים</li>
+        <li>פטריות פרוסות</li>
+        <li>אורגנו</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li><b>הבסיס:</b> ממיסים מוצרלה וגבינת שמנת במיקרו (דקה וחצי, מערבבים כל 30 שניות) או בסיר על אש נמוכה.</li>
+        <li>מוסיפים ביצה וקמח שקדים לגבינה הנמסית ומערבבים מהר לבצק אחיד.</li>
+        <li>פורשים את הבצק על נייר אפייה לעיגול דק (חצי ס"מ). אפשר ללחוח את הידיים.</li>
+        <li>אופים את הבסיס 10 דקות עד שמתחיל להזהיב.</li>
+        <li>מוציאים, מורחים רוטב עגבניות, מפזרים מוצרלה, סלאמי, זיתים ופטריות.</li>
+        <li>מחזירים לתנור 5–7 דקות עד שהגבינה נמסה ומבעבעת.</li>
+        <li>מפזרים אורגנו ומגישים.</li>
+    </ol>
+    <div class="tip">טיפ: הבסיס הזה הכי טוב כשהוא דק. אל תעשו אותו עבה — הוא לא יהיה פריך.</div>
+</div>
+
+<!-- 30 -->
+<div class="recipe" id="r30">
+    <div class="recipe-title">30. טלה בתנור עם שום ורוזמרין</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>90 דקות בישול</span>
+        <span>4–6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag slow">ארוך</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>כתף טלה (1–1.5 ק"ג) או חתיכת טלה אחרת</li>
+        <li>6 שיני שום קלופות</li>
+        <li>3 ענפי רוזמרין טרי</li>
+        <li>3 כפות שמן זית</li>
+        <li>מלח גס, פלפל שחור</li>
+        <li>חצי כוס מים / מרק</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-180 מעלות.</li>
+        <li>עושים חתכים קטנים בבשר ותוחבים לתוכם שיני שום ועלי רוזמרין.</li>
+        <li>מתבלים את הטלה נדיב במלח גס ופלפל. מזלפים שמן זית.</li>
+        <li>מניחים בתבנית עם חצי כוס מים בתחתית.</li>
+        <li>מכסים בנייר כסף ואופים שעה.</li>
+        <li>מסירים כסף ואופים עוד 30 דקות עד שהחלק העליון מוזהב.</li>
+        <li>נותנים לנוח 10 דקות לפני פריסה.</li>
+    </ol>
+</div>
+
+<!-- 31 -->
+<div class="recipe" id="r31">
+    <div class="recipe-title">31. פסטה שירטאקי בולונז</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>25 דקות בישול</span>
+        <span>3 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 חבילות נודלס שירטאקי (400 גרם)</li>
+        <li>400 גרם בשר בקר טחון</li>
+        <li>קופסת עגבניות חתוכות (ללא סוכר)</li>
+        <li>חצי בצל קצוץ דק</li>
+        <li>3 שיני שום כתושות</li>
+        <li>2 כפות שמן זית</li>
+        <li>כפית אורגנו</li>
+        <li>כפית בזיליקום</li>
+        <li>מלח, פלפל</li>
+        <li>פרמזן מגורד להגשה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>שוטפים את השירטאקי היטב תחת מים זורמים (חשוב!). מייבשים במחבת יבשה 2–3 דקות כדי להוציא לחות.</li>
+        <li>במחבת נפרדת: מחממים שמן זית, מטגנים בצל עד שמזהיב.</li>
+        <li>מוסיפים בשר טחון ומטגנים עד שמשחים (5 דקות), מפרקים עם כף.</li>
+        <li>מוסיפים שום, עגבניות, אורגנו, בזיליקום, מלח ופלפל.</li>
+        <li>מבשלים 15 דקות על אש נמוכה עד שהרוטב מתעבה.</li>
+        <li>מוסיפים את השירטאקי לרוטב, מערבבים דקה.</li>
+        <li>מגישים עם הר של פרמזן מגורד מעל.</li>
+    </ol>
+    <div class="tip">טיפ: השירטאקי עצמם טעמם ניטרלי — הם סופגים את טעם הרוטב, אז תעשו רוטב עשיר.</div>
+</div>
+
+<!-- 32 -->
+<div class="recipe" id="r32">
+    <div class="recipe-title">32. שניצל קטו פריך</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>4 חזות עוף מרוקעות (דקות)</li>
+        <li>2 ביצים טרופות</li>
+        <li>100 גרם קמח שקדים</li>
+        <li>50 גרם פרמזן מגורד דק</li>
+        <li>כפית פפריקה</li>
+        <li>חצי כפית שום אבקה</li>
+        <li>מלח, פלפל</li>
+        <li>שמן זית לטיגון שטוח</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים קמח שקדים, פרמזן, פפריקה, שום אבקה, מלח ופלפל בצלחת שטוחה.</li>
+        <li>טורפים ביצים בצלחת נפרדת.</li>
+        <li>טובלים כל חזה עוף בביצה, ואז בתערובת הקמח. לוחצים היטב כדי שהציפוי ידבק.</li>
+        <li>מחממים שמן זית (כחצי ס"מ גובה) במחבת על אש בינונית-גבוהה.</li>
+        <li>מטגנים 3–4 דקות מכל צד עד שמוזהב ופריך.</li>
+        <li>מניחים על נייר סופג.</li>
+    </ol>
+    <div class="tip">טיפ: הפרמזן הוא הסוד — הוא נותן פריכות מטורפת שקמח שקדים לבד לא נותן.</div>
+</div>
+
+<!-- 33 -->
+<div class="recipe" id="r33">
+    <div class="recipe-title">33. סלמון בתנור ברוטב שמנת ושום</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>20 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 פילה סלמון (200 גרם כל אחד)</li>
+        <li>150 מ"ל שמנת מתוקה (38%)</li>
+        <li>30 גרם חמאה</li>
+        <li>4 שיני שום כתושות</li>
+        <li>30 גרם פרמזן מגורד</li>
+        <li>כפית שמיר יבש</li>
+        <li>מלח, פלפל</li>
+        <li>סחיטת לימון</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מתבלים סלמון במלח ופלפל, מניחים בתבנית משומנת.</li>
+        <li>ממיסים חמאה במחבת, מטגנים שום דקה, מוסיפים שמנת ופרמזן. מערבבים עד שהרוטב מתעבה קלות (2–3 דקות).</li>
+        <li>שופכים את הרוטב על הסלמון.</li>
+        <li>אופים 15–18 דקות.</li>
+        <li>מגישים עם סחיטת לימון ושמיר מעל.</li>
+    </ol>
+</div>
+
+<!-- 34 -->
+<div class="recipe" id="r34">
+    <div class="recipe-title">34. קדרת בשר בקר</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>2–3 שעות בישול</span>
+        <span>6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag slow">ארוך</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>800 גרם בשר בקר לתבשיל (צוואר / שפונדרה) חתוך לקוביות</li>
+        <li>200 גרם פטריות שמפיניון חצויות</li>
+        <li>בצל אחד קצוץ</li>
+        <li>4 שיני שום כתושות</li>
+        <li>קופסת עגבניות חתוכות</li>
+        <li>כוס מים או מרק בקר</li>
+        <li>2 כפות שמן זית</li>
+        <li>כפית פפריקה</li>
+        <li>כפית כורכום</li>
+        <li>ענף רוזמרין</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מייבשים קוביות בשר. מתבלים במלח ופלפל.</li>
+        <li>מחממים שמן בסיר כבד (ברזל יצוק מומלץ). צורבים את הבשר בקבוצות עד שמוזהב מכל הצדדים. מוציאים בצד.</li>
+        <li>באותו סיר מטגנים בצל 3 דקות, מוסיפים שום ופטריות, מטגנים עוד 3 דקות.</li>
+        <li>מוסיפים פפריקה וכורכום, מערבבים דקה.</li>
+        <li>מוסיפים עגבניות, מים/מרק ורוזמרין. מחזירים בשר.</li>
+        <li>מביאים לרתיחה, מורידים לאש נמוכה מאוד, מכסים ומבשלים 2–3 שעות עד שהבשר נמס בפה.</li>
+    </ol>
+</div>
+
+<!-- 35 -->
+<div class="recipe" id="r35">
+    <div class="recipe-title">35. שוקי עוף במילוי גבינת שמנת ופטריות</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>40 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>8 שוקי עוף</li>
+        <li>100 גרם גבינת שמנת</li>
+        <li>150 גרם פטריות שמפיניון קצוצות דק</li>
+        <li>50 גרם מוצרלה מגורדת</li>
+        <li>2 שיני שום כתושות</li>
+        <li>כף חמאה</li>
+        <li>מלח, פלפל, פפריקה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-190 מעלות.</li>
+        <li>מטגנים פטריות בחמאה עם שום עד שמוזהבות. מוסיפים גבינת שמנת ומוצרלה, מערבבים עד שנמס. מורידים מהאש.</li>
+        <li>מפרידים את העור מהבשר בשוק (לא מסירים — רק יוצרים כיס).</li>
+        <li>דוחפים מילוי פטריות-גבינה מתחת לעור של כל שוק.</li>
+        <li>מתבלים מבחוץ במלח, פלפל ופפריקה.</li>
+        <li>אופים 35–40 דקות עד שהעור מוזהב.</li>
+    </ol>
+</div>
+
+<!-- 36 -->
+<div class="recipe" id="r36">
+    <div class="recipe-title">36. קלמארי מוקפץ עם שום וחמאה</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>5 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>400 גרם קלמארי נקי, חתוך לטבעות</li>
+        <li>30 גרם חמאה</li>
+        <li>3 שיני שום פרוסות דק</li>
+        <li>כף שמן זית</li>
+        <li>מלח, פלפל</li>
+        <li>סחיטת לימון</li>
+        <li>פפריקה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מייבשים את הקלמארי היטב (חשוב!).</li>
+        <li>מחממים מחבת על אש גבוהה מאוד עם שמן זית.</li>
+        <li>מוסיפים קלמארי בשכבה אחת — לא מערבבים! צורבים דקה וחצי.</li>
+        <li>הופכים, מוסיפים חמאה ושום. מערבבים דקה נוספת.</li>
+        <li>מתבלים במלח, פלפל ופפריקה. סוחטים לימון ומגישים מיד.</li>
+    </ol>
+    <div class="tip">טיפ: קלמארי מתבשל ב-2 דקות או ב-2 שעות. כל דבר באמצע = גומי. אש גבוהה ומהר!</div>
+</div>
+
+<!-- 37 -->
+<div class="recipe" id="r37">
+    <div class="recipe-title">37. כרוב ממולא בבשר</div>
+    <div class="recipe-meta">
+        <span>20 דקות הכנה</span>
+        <span>60 דקות בישול</span>
+        <span>6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag slow">ארוך</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>ראש כרוב ירוק / לבן</li>
+        <li>500 גרם בשר בקר טחון</li>
+        <li>ביצה אחת</li>
+        <li>חצי בצל מגורד</li>
+        <li>2 שיני שום כתושות</li>
+        <li>כפית פפריקה, חצי כפית כורכום</li>
+        <li>מלח, פלפל</li>
+        <li><b>לרוטב:</b></li>
+        <li>קופסת עגבניות חתוכות</li>
+        <li>כוס מים</li>
+        <li>סחיטת לימון</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מרתיחים סיר מים גדול. מכניסים את ראש הכרוב למים הרותחים למשך 5 דקות. מוציאים ומפרידים עלים בזהירות.</li>
+        <li>מערבבים בשר טחון, ביצה, בצל מגורד, שום ותבלינים.</li>
+        <li>מניחים כף בשר על כל עלה כרוב, מגלגלים ותוחבים את הקצוות פנימה.</li>
+        <li>מסדרים את הכרוביות בסיר צפוף, תפר למטה.</li>
+        <li>מערבבים עגבניות חתוכות, מים, לימון, מלח ופלפל — שופכים על הכרוביות.</li>
+        <li>מביאים לרתיחה, מורידים אש ומבשלים שעה עם מכסה.</li>
+    </ol>
+</div>
+
+<!-- 38 -->
+<div class="recipe" id="r38">
+    <div class="recipe-title">38. חזה עוף בפפריקה ושמנת</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>20 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 חזות עוף חתוכות לרצועות</li>
+        <li>150 מ"ל שמנת מתוקה (38%)</li>
+        <li>2 כפיות פפריקה</li>
+        <li>2 שיני שום כתושות</li>
+        <li>כף חמאה</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מתבלים רצועות עוף במלח, פלפל ופפריקה.</li>
+        <li>ממיסים חמאה במחבת על אש גבוהה. מטגנים עוף עד שמוזהב מכל הצדדים (5–6 דקות).</li>
+        <li>מוסיפים שום, מערבבים דקה.</li>
+        <li>מורידים אש, שופכים שמנת. מערבבים ומבשלים 5 דקות עד שהרוטב מתעבה ונדבק לעוף.</li>
+    </ol>
+</div>
+
+<!-- 39 -->
+<div class="recipe" id="r39">
+    <div class="recipe-title">39. מוסקה קטו (בסיס פטריות)</div>
+    <div class="recipe-meta">
+        <span>20 דקות הכנה</span>
+        <span>40 דקות בישול</span>
+        <span>6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag slow">ארוך</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>500 גרם פטריות פורטובלו, פרוסות לפרוסות של חצי ס"מ</li>
+        <li>500 גרם בשר בקר טחון</li>
+        <li>קופסת עגבניות חתוכות</li>
+        <li>בצל אחד קצוץ</li>
+        <li>3 שיני שום</li>
+        <li>כפית אורגנו, מלח, פלפל</li>
+        <li><b>לבשמל קטו:</b></li>
+        <li>200 מ"ל שמנת מתוקה</li>
+        <li>100 גרם גבינת שמנת</li>
+        <li>ביצה אחת</li>
+        <li>50 גרם פרמזן מגורד</li>
+        <li>קורט מלח</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-180 מעלות.</li>
+        <li>צולים פרוסות פטריות בתנור/מחבת עד שמוזהבות ויבשות. מניחים בצד.</li>
+        <li>מטגנים בצל בשמן, מוסיפים בשר טחון ומשחימים. מוסיפים שום, עגבניות, אורגנו, מלח ופלפל. מבשלים 10 דקות.</li>
+        <li><b>בשמל:</b> מערבבים שמנת, גבינת שמנת, ביצה ופרמזן עד אחיד.</li>
+        <li>בתבנית אפייה: שכבת פטריות → שכבת בשר → שכבת פטריות → שופכים בשמל מעל.</li>
+        <li>מפזרים פרמזן נוסף. אופים 30–35 דקות עד שמוזהב למעלה.</li>
+    </ol>
+</div>
+
+<!-- 40 -->
+<div class="recipe" id="r40">
+    <div class="recipe-title">40. חזיר צלוי עם שום ורוזמרין</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>2 שעות בישול</span>
+        <span>6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag slow">ארוך</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>1.5 ק"ג נתח חזיר (כתף / צוואר)</li>
+        <li>6 שיני שום</li>
+        <li>3 ענפי רוזמרין</li>
+        <li>3 כפות שמן זית</li>
+        <li>מלח גס נדיב</li>
+        <li>פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-160 מעלות.</li>
+        <li>חורצים את העור/שומן בצורת רשת. תוחבים שיני שום ורוזמרין בחריצים.</li>
+        <li>משפשפים מלח גס ושמן זית על כל הנתח.</li>
+        <li>מניחים בתבנית, מכסים בנייר כסף.</li>
+        <li>צולים שעה וחצי מכוסה.</li>
+        <li>מסירים כסף, מעלים חום ל-220 ועוד 30 דקות לקראסט מוזהב.</li>
+        <li>נותנים לנוח 15 דקות לפני חיתוך.</li>
+    </ol>
+</div>
+
+<!-- 41 -->
+<div class="recipe" id="r41">
+    <div class="recipe-title">41. בורגר כפול עם בייקון, גבינה וגוואקמולי</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>500 גרם בשר בקר טחון (4 קציצות דקות)</li>
+        <li>4 פרוסות צ'דר</li>
+        <li>6 פרוסות בייקון פריך</li>
+        <li>2 לחמניות קטו</li>
+        <li><b>גוואקמולי:</b> אבוקדו מרוסק + לימון + מלח + בצל ירוק קצוץ</li>
+        <li>מיונז</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחלקים 500 גרם ל-4 קציצות שטוחות. מתבלים נדיב מבחוץ.</li>
+        <li>צורבים 3 דקות מכל צד. מניחים צ'דר על כל קציצה דקה לפני הסוף.</li>
+        <li>לחמנייה קטו → מיונז → קציצה עם גבינה → בייקון → גוואקמולי → קציצה שנייה עם גבינה → לחמנייה.</li>
+    </ol>
+</div>
+
+<!-- 42 -->
+<div class="recipe" id="r42">
+    <div class="recipe-title">42. עוף שלם בתנור</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>75 דקות בישול</span>
+        <span>4–6 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>עוף שלם (1.5–1.8 ק"ג)</li>
+        <li>30 גרם חמאה רכה</li>
+        <li>4 שיני שום כתושות</li>
+        <li>כפית פפריקה</li>
+        <li>כפית כורכום</li>
+        <li>כפית אורגנו</li>
+        <li>מלח גס, פלפל</li>
+        <li>חצי לימון</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מערבבים חמאה רכה עם שום, פפריקה, כורכום, אורגנו, מלח ופלפל.</li>
+        <li>מורחים את תערובת החמאה מתחת לעור ועל כל השטח החיצוני של העוף.</li>
+        <li>תוחבים חצי לימון לתוך חלל העוף.</li>
+        <li>מניחים בתבנית על רשת (אם יש).</li>
+        <li>צולים 70–80 דקות עד שהעור מוזהב ופריך, והמיצים שיוצאים מהשוק שקופים.</li>
+        <li>נותנים לנוח 10 דקות.</li>
+    </ol>
+</div>
+
+<!-- 43 -->
+<div class="recipe" id="r43">
+    <div class="recipe-title">43. כנפיים ברוטב סויה ושום</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>40 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>1 ק"ג כנפיים עוף</li>
+        <li>3 כפות רוטב סויה (ללא סוכר)</li>
+        <li>כף שמן זית</li>
+        <li>4 שיני שום כתושות</li>
+        <li>כף חמאה</li>
+        <li>פלפל שחור</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מערבבים סויה, שמן זית, שום ופלפל.</li>
+        <li>מכניסים כנפיים ומערבבים שיהיו מצופות.</li>
+        <li>מסדרים בתבנית בשכבה אחת.</li>
+        <li>אופים 20 דקות, הופכים, ועוד 15–20 דקות.</li>
+        <li>ממיסים חמאה ומזלפים על הכנפיים ברגע שיוצאות מהתנור.</li>
+    </ol>
+</div>
+
+<!-- 44 -->
+<div class="recipe" id="r44">
+    <div class="recipe-title">44. קציצות עוף עם פטריות ברוטב שמנת</div>
+    <div class="recipe-meta">
+        <span>15 דקות הכנה</span>
+        <span>25 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>500 גרם חזה עוף טחון (או שוק טחון)</li>
+        <li>ביצה</li>
+        <li>2 כפות קמח שקדים</li>
+        <li>מלח, פלפל, פפריקה</li>
+        <li>200 גרם פטריות פרוסות</li>
+        <li>150 מ"ל שמנת מתוקה</li>
+        <li>2 שיני שום</li>
+        <li>כף חמאה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים עוף טחון, ביצה, קמח שקדים ותבלינים. מגלגלים קציצות.</li>
+        <li>מטגנים קציצות בחמאה עד שמוזהבות מכל הצדדים. מוציאים.</li>
+        <li>באותה מחבת מטגנים פטריות ושום.</li>
+        <li>מוסיפים שמנת, מלח ופלפל. מחזירים קציצות.</li>
+        <li>מבשלים 10 דקות על אש נמוכה עד שהרוטב מתעבה.</li>
+    </ol>
+</div>
+
+<!-- 45 -->
+<div class="recipe" id="r45">
+    <div class="recipe-title">45. סטייק על הפלנצ'ה עם פטריות מוקפצות</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>15 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>2 סטייקים (250 גרם כל אחד) בטמפרטורת חדר</li>
+        <li>300 גרם פטריות שמפיניון חצויות</li>
+        <li>30 גרם חמאה</li>
+        <li>2 שיני שום פרוסות</li>
+        <li>שמן זית</li>
+        <li>מלח גס, פלפל שחור</li>
+        <li>ענף רוזמרין</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מתבלים סטייקים במלח ופלפל.</li>
+        <li>במחבת/פלנצ'ה חמה מאוד עם שמן זית — צורבים סטייקים 3–4 דקות מכל צד. מוציאים לנוח.</li>
+        <li>באותה מחבת: חמאה, פטריות ושום. מטגנים על אש גבוהה 4–5 דקות עד שמוזהבות.</li>
+        <li>מוסיפים רוזמרין בסוף.</li>
+        <li>מגישים סטייק עם הפטריות מעל ומיצי המחבת מסביב.</li>
+    </ol>
+</div>
+
+<!-- ==================== SNACKS ==================== -->
+<div class="section-header snack" id="snack-section">
+    <h2>חטיפים ונשנושים</h2>
+    <p>לבין הארוחות</p>
+</div>
+
+<!-- 46 -->
+<div class="recipe" id="r46">
+    <div class="recipe-title">46. צ'יפס גבינה (קריספים)</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>8 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>100 גרם גבינה צהובה מגורדת (עמק / צ'דר / גאודה)</li>
+        <li>פפריקה (אופציונלי)</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>מסדרים ערימות קטנות של גבינה מגורדת על נייר אפייה, עם רווח ביניהן.</li>
+        <li>אופים 6–8 דקות עד שהגבינה נמסה, מבעבעת ומתחילה להזהיב.</li>
+        <li>מוציאים ונותנים להתקרר — הם מתקשים ונהיים פריכים.</li>
+        <li>אפשר לפזר פפריקה לפני האפייה.</li>
+    </ol>
+    <div class="tip">טיפ: גבינות קשות יותר (פרמזן, צ'דר ישן) נותנות תוצאה פריכה יותר.</div>
+</div>
+
+<!-- 47 -->
+<div class="recipe" id="r47">
+    <div class="recipe-title">47. כדורי גבינת שמנת ובייקון</div>
+    <div class="recipe-meta">
+        <span>10 דקות הכנה</span>
+        <span>ללא בישול (+ 30 דקות קירור)</span>
+        <span>12 כדורים</span>
+    </div>
+    <div class="tags"><span class="tag medium">בינוני</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>200 גרם גבינת שמנת (בטמפרטורת חדר)</li>
+        <li>50 גרם גבינה צהובה מגורדת</li>
+        <li>4 פרוסות בייקון מטוגנות ומפוררות</li>
+        <li>בצל ירוק קצוץ דק</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים גבינת שמנת, גבינה צהובה, חצי מהבייקון, בצל ירוק, מלח ופלפל.</li>
+        <li>מכניסים למקרר 30 דקות עד שמתקשה.</li>
+        <li>מגלגלים כדורים קטנים ומגלגלים אותם בבייקון מפורר שנשאר.</li>
+        <li>שומרים במקרר. חטיף מושלם.</li>
+    </ol>
+</div>
+
+<!-- 48 -->
+<div class="recipe" id="r48">
+    <div class="recipe-title">48. אבוקדו ממולא טונה</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>ללא בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>אבוקדו בשל חצוי</li>
+        <li>קופסת טונה בשמן מסוננת</li>
+        <li>כף מיונז</li>
+        <li>בצל ירוק קצוץ</li>
+        <li>סחיטת לימון</li>
+        <li>מלח, פלפל</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מערבבים טונה עם מיונז, בצל ירוק, לימון, מלח ופלפל.</li>
+        <li>ממלאים את חללי האבוקדו (אפשר להגדיל קצת את החלל עם כף).</li>
+        <li>אוכלים ישר מהקליפה.</li>
+    </ol>
+</div>
+
+<!-- 49 -->
+<div class="recipe" id="r49">
+    <div class="recipe-title">49. שקדים קלויים מתובלים</div>
+    <div class="recipe-meta">
+        <span>3 דקות הכנה</span>
+        <span>10 דקות בישול</span>
+        <span>4 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>200 גרם שקדים גולמיים</li>
+        <li>כף שמן זית</li>
+        <li>כפית פפריקה</li>
+        <li>חצי כפית מלח</li>
+        <li>חצי כפית שום אבקה</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-170 מעלות.</li>
+        <li>מערבבים שקדים עם שמן זית ותבלינים.</li>
+        <li>פורשים בשכבה אחת על תבנית עם נייר אפייה.</li>
+        <li>קולים 10–12 דקות עד שריחניים. מערבבים פעם באמצע.</li>
+        <li>נותנים להתקרר לפני אכילה. שומרים בצנצנת אטומה.</li>
+    </ol>
+    <div class="tip">טיפ: לא לאכול יותר מקומץ אחד ביום — שקדים טעימים אבל הפחמימות מצטברות.</div>
+</div>
+
+<!-- 50 -->
+<div class="recipe" id="r50">
+    <div class="recipe-title">50. רולדי בייקון וגבינה</div>
+    <div class="recipe-meta">
+        <span>5 דקות הכנה</span>
+        <span>12 דקות בישול</span>
+        <span>2 מנות</span>
+    </div>
+    <div class="tags"><span class="tag quick">מהיר</span></div>
+    <h4>מצרכים</h4>
+    <ul>
+        <li>6 פרוסות בייקון</li>
+        <li>6 מקלות גבינה צהובה (או פרוסות עמק מגולגלות)</li>
+    </ul>
+    <h4>הכנה</h4>
+    <ol>
+        <li>מחממים תנור ל-200 מעלות.</li>
+        <li>עוטפים כל מקל/גליל גבינה בפרוסת בייקון.</li>
+        <li>מניחים על תבנית עם נייר אפייה, תפר למטה.</li>
+        <li>אופים 10–12 דקות עד שהבייקון פריך.</li>
+        <li>נותנים להתקרר דקה לפני אכילה (הגבינה רותחת!).</li>
+    </ol>
+</div>
+
+<!-- Output Section -->
+<div class="output-section" id="outputSection">
+    <div class="output-header">
+        <h3>רשימת מצרכים לפי מתכון</h3>
+        <button class="copy-btn" id="copyBtn" onclick="copyOutput()">העתק הכל</button>
+    </div>
+    <textarea class="output-text" id="outputText" readonly></textarea>
+</div>
+
+</div> <!-- end container -->
+
+<!-- Sticky week bar -->
+<div class="week-bar" id="weekBar">
+    <div class="week-bar-count">נבחרו: <span id="weekCount">0</span> מתכונים</div>
+    <button class="week-bar-btn generate-list-btn" onclick="generateIngredientList()">צור רשימת קניות</button>
+    <button class="week-bar-btn clear-week-btn" onclick="clearWeekSelection()">נקה בחירה</button>
+</div>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+
+<script>
+window.addEventListener('scroll', () => {
+    document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// =================== CROSS-OFF ===================
+(function() {
+    const KEY = 'keto-recipes-crossedoff';
+    function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { return []; } }
+    function save(list) { localStorage.setItem(KEY, JSON.stringify(list)); }
+    function toggle(id) {
+        let list = load();
+        const idx = list.indexOf(id);
+        if (idx === -1) list.push(id); else list.splice(idx, 1);
+        save(list); applyState(id);
+    }
+    function applyState(id) {
+        const list = load();
+        const crossed = list.includes(id);
+        const card = document.getElementById(id);
+        if (card) card.classList.toggle('crossed-off', crossed);
+        const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
+        if (tocLink) tocLink.classList.toggle('crossed-off', crossed);
+        const btn = card && card.querySelector('.crossoff-btn');
+        if (btn) btn.textContent = crossed ? '+' : '\u00d7';
+    }
+    document.querySelectorAll('.recipe').forEach(card => {
+        const id = card.id; if (!id) return;
+        card.style.position = 'relative';
+        const btn = document.createElement('button');
+        btn.className = 'crossoff-btn';
+        btn.title = 'מחק מתכון';
+        btn.addEventListener('click', () => toggle(id));
+        card.prepend(btn);
+        applyState(id);
+    });
+})();
+
+// =================== WEEK SELECTION ===================
+const WEEK_KEY = 'keto-recipes-week';
+function loadWeek() { try { return JSON.parse(localStorage.getItem(WEEK_KEY)) || []; } catch(e) { return []; } }
+function saveWeek(list) { localStorage.setItem(WEEK_KEY, JSON.stringify(list)); }
+
+function toggleWeek(id) {
+    let list = loadWeek();
+    const idx = list.indexOf(id);
+    if (idx === -1) list.push(id); else list.splice(idx, 1);
+    saveWeek(list);
+    applyWeekState(id);
+    updateWeekBar();
+}
+
+function applyWeekState(id) {
+    const list = loadWeek();
+    const selected = list.includes(id);
+    const card = document.getElementById(id);
+    if (card) {
+        card.classList.toggle('selected-week', selected);
+        const btn = card.querySelector('.select-btn');
+        if (btn) btn.textContent = selected ? '\u2713 נבחר' : 'בחר לשבוע';
+    }
+    const tocLink = document.querySelector(`.toc a[href="#${id}"]`);
+    if (tocLink) tocLink.classList.toggle('selected-week', selected);
+}
+
+function updateWeekBar() {
+    const list = loadWeek();
+    document.getElementById('weekCount').textContent = list.length;
+    document.getElementById('weekBar').classList.toggle('visible', list.length > 0);
+}
+
+function clearWeekSelection() {
+    const list = loadWeek();
+    saveWeek([]);
+    list.forEach(id => applyWeekState(id));
+    updateWeekBar();
+    document.getElementById('outputSection').classList.remove('visible');
+}
+
+// Add select buttons to all recipe cards
+document.querySelectorAll('.recipe').forEach(card => {
+    const id = card.id; if (!id) return;
+    const btn = document.createElement('button');
+    btn.className = 'select-btn';
+    btn.addEventListener('click', () => toggleWeek(id));
+    card.prepend(btn);
+    applyWeekState(id);
+});
+updateWeekBar();
+
+// =================== GENERATE INGREDIENT LIST ===================
+function generateIngredientList() {
+    const list = loadWeek();
+    if (!list.length) return;
+
+    const lines = [];
+    lines.push('========================================');
+    lines.push('  רשימת מצרכים - המתכונים שבחרתי');
+    lines.push('========================================');
+    lines.push('');
+
+    list.forEach(id => {
+        const card = document.getElementById(id);
+        if (!card) return;
+
+        // Get recipe title
+        const titleEl = card.querySelector('.recipe-title');
+        const title = titleEl ? titleEl.textContent.trim() : id;
+
+        // Get servings from meta
+        const metaSpans = card.querySelectorAll('.recipe-meta span');
+        let servings = '';
+        metaSpans.forEach(s => {
+            const txt = s.textContent.trim();
+            if (txt.includes('מנ') || txt.includes('כדור') || txt.includes('מאפינס')) servings = txt;
+        });
+
+        lines.push('--- ' + title + (servings ? ' (' + servings + ')' : '') + ' ---');
+
+        // Get ingredients: the first <ul> after an h4 that says מצרכים
+        const h4s = card.querySelectorAll('h4');
+        let ingredientUl = null;
+        for (const h4 of h4s) {
+            if (h4.textContent.includes('מצרכים')) {
+                ingredientUl = h4.nextElementSibling;
+                break;
+            }
+        }
+
+        if (ingredientUl && ingredientUl.tagName === 'UL') {
+            const items = ingredientUl.querySelectorAll('li');
+            items.forEach(li => {
+                const text = li.textContent.trim();
+                if (text.startsWith('לרוטב:') || text.startsWith('לציפוי:') || text.startsWith('לבסיס:') || text.startsWith('למילוי:') || text.startsWith('לבשמל')) {
+                    lines.push('  ' + text);
+                } else {
+                    lines.push('  - ' + text);
+                }
+            });
+        }
+        lines.push('');
+    });
+
+    lines.push('========================================');
+    lines.push('סה"כ ' + list.length + ' מתכונים נבחרו');
+    lines.push('========================================');
+
+    document.getElementById('outputText').value = lines.join('\n');
+    document.getElementById('outputSection').classList.add('visible');
+    document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyOutput() {
+    const text = document.getElementById('outputText').value;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '\u2713 הועתק!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'העתק הכל'; btn.classList.remove('copied'); }, 2500);
+    });
+}
+</script>
+
+</body>
+</html>
